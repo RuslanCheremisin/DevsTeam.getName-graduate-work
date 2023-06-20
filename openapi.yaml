@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Ads app API Documentation
+  title: API Documentation
   version: '1.0'
 servers:
   - url: http://localhost:8080
@@ -23,8 +23,6 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
-        '404':
-          description: Not Found
   /users/me:
     get:
       tags:
@@ -40,10 +38,6 @@ paths:
           description: OK
         '401':
           description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
     patch:
       tags:
         - Пользователи
@@ -53,22 +47,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/UpdateUser'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '204':
-          description: No Content
+                $ref: '#/components/schemas/UpdateUser'
         '401':
           description: Unauthorized
-        '403':
-          description: Forbidden
-        '404':
-          description: Not Found
   /users/me/image:
     patch:
       tags:
@@ -89,8 +77,8 @@ paths:
       responses:
         '200':
           description: OK
-        '404':
-          description: Not Found
+        '401':
+          description: Unauthorized
 
   /register:
     post:
@@ -102,16 +90,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterReq'
+              $ref: '#/components/schemas/Register'
       responses:
-        '404':
-          description: Not Found
         '201':
           description: Created
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
   /login:
     post:
       tags:
@@ -122,16 +104,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginReq'
+              $ref: '#/components/schemas/Login'
       responses:
         '200':
           description: OK
-        '404':
-          description: Not Found
         '401':
           description: Unauthorized
-        '403':
-          description: Forbidden
   /ads:
     get:
       tags:
@@ -144,7 +122,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseWrapperAds'
+                $ref: '#/components/schemas/Ads'
     post:
       tags:
         - Объявления
@@ -160,7 +138,7 @@ paths:
               type: object
               properties:
                 properties:
-                  $ref: '#/components/schemas/CreateAds'
+                  $ref: '#/components/schemas/CreateOrUpdateAd'
                 image:
                   type: string
                   format: binary
@@ -170,11 +148,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ads'
-        '404':
-          description: Not Found
-        '403':
-          description: Forbidden
+                $ref: '#/components/schemas/Ad'
         '401':
           description: Unauthorized
   /ads/{id}/comments:
@@ -196,9 +170,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseWrapperComment'
+                $ref: '#/components/schemas/Comments'
+        '401':
+          description: Unauthorized
         '404':
-          description: Not Found
+          description: Not found
 
     post:
       tags:
@@ -216,7 +192,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/CreateOrUpdateComment'
       responses:
         '200':
           description: OK
@@ -224,12 +200,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Comment'
-        '404':
-          description: Not Found
-        '403':
-          description: Forbidden
         '401':
           description: Unauthorized
+        '404':
+          description: Not found
 
   /ads/{id}:
     get:
@@ -250,9 +224,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FullAds'
+                $ref: '#/components/schemas/ExtendedAd'
+        '401':
+          description: Unauthorized
         '404':
-          description: Not Found
+          description: Not found
     delete:
       tags:
         - Объявления
@@ -272,6 +248,8 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
+        '404':
+          description: Not found
     patch:
       tags:
         - Объявления
@@ -288,21 +266,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateAds'
-        required: true
+              $ref: '#/components/schemas/CreateOrUpdateAd'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Ads'
-        '404':
-          description: Not Found
+                $ref: '#/components/schemas/Ad'
         '403':
           description: Forbidden
         '401':
           description: Unauthorized
+        '404':
+          description: Not found
   /ads/{adId}/comments/{commentId}:
     delete:
       tags:
@@ -325,12 +302,12 @@ paths:
       responses:
         '200':
           description: OK
-        '404':
-          description: Not Found
         '403':
           description: Forbidden
         '401':
           description: Unauthorized
+        '404':
+          description: Not found
     patch:
       tags:
         - Комментарии
@@ -353,7 +330,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: '#/components/schemas/CreateOrUpdateComment'
       responses:
         '200':
           description: OK
@@ -361,12 +338,12 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/Comment'
-        '404':
-          description: Not Found
         '403':
           description: Forbidden
         '401':
           description: Unauthorized
+        '404':
+          description: Not found
 
   /ads/me:
     get:
@@ -379,12 +356,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseWrapperAds'
+                $ref: '#/components/schemas/Ads'
           description: OK
         '401':
           description: Unauthorized
-        '403':
-          description: Forbidden
   /ads/{id}/image:
     patch:
       tags:
@@ -419,8 +394,12 @@ paths:
                 items:
                   type: string
                   format: byte
+        '403':
+          description: Forbidden
+        '401':
+          description: Unauthorized
         '404':
-          description: Not Found
+          description: Not found
 
 components:
   schemas:
@@ -433,7 +412,7 @@ components:
         newPassword:
           type: string
           description: 'новый пароль'
-    RegisterReq:
+    Register:
       type: object
       properties:
         username:
@@ -457,7 +436,7 @@ components:
           enum:
             - USER
             - ADMIN
-    LoginReq:
+    Login:
       type: object
       properties:
         password:
@@ -466,11 +445,7 @@ components:
         username:
           type: string
           description: 'логин'
-    CreateAds:
-      required:
-        - description
-        - price
-        - title
+    CreateOrUpdateAd:
       type: object
       properties:
         description:
@@ -483,7 +458,15 @@ components:
         title:
           type: string
           description: 'заголовок объявления'
-    Ads:
+    CreateOrUpdateComment:
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          type: string
+          description: 'текст комментария'
+    Ad:
       type: object
       properties:
         author:
@@ -550,7 +533,19 @@ components:
         image:
           type: string
           description: 'ссылка на аватар пользователя'
-    ResponseWrapperAds:
+    UpdateUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: 'имя пользователя'
+        lastName:
+          type: string
+          description: 'фамилия пользователя'
+        phone:
+          type: string
+          description: 'телефон пользователя'
+    Ads:
       type: object
       properties:
         count:
@@ -560,8 +555,8 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/Ads'
-    FullAds:
+            $ref: '#/components/schemas/Ad'
+    ExtendedAd:
       type: object
       properties:
         pk:
@@ -593,7 +588,7 @@ components:
         title:
           type: string
           description: 'заголовок объявления'
-    ResponseWrapperComment:
+    Comments:
       type: object
       properties:
         count:

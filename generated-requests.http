@@ -92,6 +92,16 @@ GET http://localhost:8080/ads
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
+###
+GET http://localhost:8080/ads/1
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
+
+###
+DELETE http://localhost:8080/ads/1
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
+
 
 
 
