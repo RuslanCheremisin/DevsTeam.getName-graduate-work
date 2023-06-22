@@ -47,7 +47,7 @@ public class AdsController {
                     description = "Not found")
     })
     @GetMapping("{id}")
-    public ResponseEntity<?> getAdById(@PathVariable Integer id) {
+    public ResponseEntity<?> getAds(@PathVariable Integer id) {
         ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO();
         return ResponseEntity.ok().body(extendedAdDTO);
     }
@@ -80,7 +80,7 @@ public class AdsController {
             )
     })
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable Long id) {
+    public ResponseEntity<?> removeAd(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
