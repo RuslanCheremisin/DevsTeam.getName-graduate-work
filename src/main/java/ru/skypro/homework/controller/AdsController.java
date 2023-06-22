@@ -86,118 +86,115 @@ public class AdsController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @RestController
-    @RequestMapping("/ads")
-    public class AdsController {
 
-        @GetMapping("/{id}/comments")
-        @Tags(
-                @Tag(name = "Комментарии")
-        )
-        @Operation(
-                summary = "Получить комментарии объявления",
-                description = "Получение всех комментариев по id объявления"
-        )
-        @ApiResponses(value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "OK"
-                ),
-                @ApiResponse(
-                        responseCode = "404",
-                        description = "Not found"
-                )
-        }
-        )
-        public ResponseEntity<Comments> getComments(@PathVariable(name = "id") int adId) {
-            return ResponseEntity.ok().body(new Comments());
-        }
+    @GetMapping("/{id}/comments")
+    @Tags(
+            @Tag(name = "Комментарии")
+    )
+    @Operation(
+            summary = "Получить комментарии объявления",
+            description = "Получение всех комментариев по id объявления"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found"
+            )
+    }
+    )
+    public ResponseEntity<Comments> getComments(@PathVariable(name = "id") int adId) {
+        return ResponseEntity.ok().body(new Comments());
+    }
 
-        @PostMapping("/{id}/comments")
-        @Tags(
-                @Tag(name = "Комментарии")
-        )
-        @Operation(
-                summary = "Добавление комментария",
-                description = "Добавление комментария по id объявления"
-        )
-        @ApiResponses(value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "OK"
-                ),
-                @ApiResponse(
-                        responseCode = "404",
-                        description = "Not found"
-                ),
-                @ApiResponse(
-                        responseCode = "403",
-                        description = "Forbidden"
-                ),
-                @ApiResponse(
-                        responseCode = "401",
-                        description = "Unauthorized"
-                )
-        }
-        )
-        public ResponseEntity<Comment> addComment(@PathVariable(name = "id") int adId, @RequestBody Comment comment) {
-            return ResponseEntity.ok(new Comment());
-        }
+    @PostMapping("/{id}/comments")
+    @Tags(
+            @Tag(name = "Комментарии")
+    )
+    @Operation(
+            summary = "Добавление комментария",
+            description = "Добавление комментария по id объявления"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized"
+            )
+    }
+    )
+    public ResponseEntity<Comment> addComment(@PathVariable(name = "id") int adId, @RequestBody Comment comment) {
+        return ResponseEntity.ok(new Comment());
+    }
 
-        @GetMapping("/{id}")
-        @Tags(
-                @Tag(name = "Объявления")
-        )
-        @Operation(
-                summary = "Получить информацию об объявлении",
-                description = "Получение объявления по id"
-        )
-        @ApiResponses(value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "OK"
-                ),
-                @ApiResponse(
-                        responseCode = "404",
-                        description = "Not found"
-                )
-        }
-        )
-        public ResponseEntity<ExtendedAd> getAds(@PathVariable(name = "id") int adId) {
-            return ResponseEntity.ok().body(new ExtendedAd());
-        }
+    @GetMapping("/{id}")
+    @Tags(
+            @Tag(name = "Объявления")
+    )
+    @Operation(
+            summary = "Получить информацию об объявлении",
+            description = "Получение объявления по id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OK"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found"
+            )
+    }
+    )
+    public ResponseEntity<ExtendedAd> getAds(@PathVariable(name = "id") int adId) {
+        return ResponseEntity.ok().body(new ExtendedAd());
+    }
 
-        @DeleteMapping("/{id}")
-        @Tags(
-                @Tag(name = "Объявления")
-        )
-        @Operation(
-                summary = "Удалить объявление",
-                description = "Удаление объявления по id"
-        )
-        @ApiResponses(value = {
-                @ApiResponse(
-                        responseCode = "204",
-                        description = "No content"
-                ),
-                @ApiResponse(
-                        responseCode = "401",
-                        description = "Unauthorized"
-                ),
-                @ApiResponse(
-                        responseCode = "403",
-                        description = "Forbidden"
-                ),
-                @ApiResponse(
-                        responseCode = "404",
-                        description = "Not found"
-                )
+    @DeleteMapping("/{id}")
+    @Tags(
+            @Tag(name = "Объявления")
+    )
+    @Operation(
+            summary = "Удалить объявление",
+            description = "Удаление объявления по id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "No content"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized"
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not found"
+            )
 
-        }
-        )
-        public ResponseEntity<?> removeAd(@PathVariable(name = "id") int adId) {
-            return ResponseEntity.noContent().build();
-        }
+    }
+    )
+    public ResponseEntity<?> removeAd(@PathVariable(name = "id") int adId) {
+        return ResponseEntity.noContent().build();
+    }
 }
 
 
