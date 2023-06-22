@@ -16,10 +16,8 @@ import ru.skypro.homework.dto.AdsGetResp;
 
 import java.util.ArrayList;
 
-@Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/ads")
 public class AdsController {
 
