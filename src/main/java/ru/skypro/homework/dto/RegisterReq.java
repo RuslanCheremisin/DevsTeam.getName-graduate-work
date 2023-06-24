@@ -1,4 +1,4 @@
-package getName.devsTeam.graduateWork.dto;
+package ru.skypro.homework.dto;
 
 import lombok.Data;
 

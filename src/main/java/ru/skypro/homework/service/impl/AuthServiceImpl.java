@@ -1,8 +1,8 @@
-package getName.devsTeam.graduateWork.service.impl;
+package ru.skypro.homework.service.impl;
 
-import getName.devsTeam.graduateWork.dto.RegisterReq;
-import getName.devsTeam.graduateWork.dto.Role;
-import getName.devsTeam.graduateWork.service.AuthService;
+import ru.skypro.homework.dto.RegisterReq;
+import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.service.AuthService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,9 +1,9 @@
-package getName.devsTeam.graduateWork.controller;
+package ru.skypro.homework.controller;
 
-import getName.devsTeam.graduateWork.dto.LoginReq;
-import getName.devsTeam.graduateWork.dto.RegisterReq;
-import getName.devsTeam.graduateWork.dto.Role;
-import getName.devsTeam.graduateWork.service.AuthService;
+import ru.skypro.homework.dto.LoginReq;
+import ru.skypro.homework.dto.RegisterReq;
+import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

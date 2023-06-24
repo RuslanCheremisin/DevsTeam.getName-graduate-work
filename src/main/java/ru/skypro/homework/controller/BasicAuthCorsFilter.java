@@ -1,4 +1,4 @@
-package getName.devsTeam.graduateWork.controller;
+package ru.skypro.homework.controller;
 
 
 import org.springframework.stereotype.Component;

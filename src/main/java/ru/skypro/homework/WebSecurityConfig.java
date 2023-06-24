@@ -1,4 +1,4 @@
-package getName.devsTeam.graduateWork;
+package ru.skypro.homework;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
