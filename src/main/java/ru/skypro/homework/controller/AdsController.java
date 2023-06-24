@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.AdDTO;
-import ru.skypro.homework.dto.ExtendedAdDTO;
-import ru.skypro.homework.dto.AdsAddReq;
-import ru.skypro.homework.dto.AdsGetResp;
+import ru.skypro.homework.dto.*;
 
 import java.util.ArrayList;
 
@@ -137,8 +134,8 @@ public class AdsController {
             )
     }
     )
-    public ResponseEntity<Comment> addComment(@PathVariable(name = "id") int adId, @RequestBody Comment comment) {
-        return ResponseEntity.ok(new Comment());
+    public ResponseEntity<CommentDTO> addComment(@PathVariable(name = "id") int adId, @RequestBody CommentDTO comment) {
+        return ResponseEntity.ok(new CommentDTO());
     }
 
     @GetMapping("/{id}")
@@ -160,8 +157,8 @@ public class AdsController {
             )
     }
     )
-    public ResponseEntity<ExtendedAd> getAds(@PathVariable(name = "id") int adId) {
-        return ResponseEntity.ok().body(new ExtendedAd());
+    public ResponseEntity<ExtendedAdDTO> getAds(@PathVariable(name = "id") int adId) {
+        return ResponseEntity.ok().body(new ExtendedAdDTO());
     }
 
     @DeleteMapping("/{id}")
@@ -193,7 +190,7 @@ public class AdsController {
     }
     )
     public ResponseEntity<?> removeAd(@PathVariable(name = "id") int adId) {
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
 
