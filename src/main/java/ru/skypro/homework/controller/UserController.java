@@ -24,128 +24,32 @@ import java.io.File;
 public class UserController {
 
 
-    @Tags(
-            @Tag(name = "Пользователи")
-    )
-    @Operation(
-            summary = "setPassword",
-            description = "установка пароля"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = {@Content(mediaType = "application/json")}
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
-    }
-    )
+
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody String newPassword) {
         PasswordDTO passwordDTO = new PasswordDTO();
         return ResponseEntity.status(HttpStatus.CREATED).body(passwordDTO);
     }
 
-    @Tags(
-            @Tag(name = "Пользователи")
-    )
-    @Operation(
-            summary = "getUser",
-            description = "получение пользователя"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = {@Content(mediaType = "application/json")}
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
-    }
-    )
+
+
     @GetMapping("/me")
     public ResponseEntity<?> getUser() {
         UserDTO userDTO = new UserDTO();
         return ResponseEntity.ok().body(userDTO);
     }
 
-    @Tags(
-            @Tag(name = "Пользователи")
-    )
-    @Operation(
-            summary = "updateUser",
-            description = "обновление данных пользователя"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = {@Content(mediaType = "application/json")}
-            ),
-            @ApiResponse(
-                    responseCode = "204",
-                    description = "No content"
-            ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "Unauthorized"
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Forbidden"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
-    }
-    )
+
+
     @PatchMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok().body(userDTO);
     }
-    @Tags(
-            @Tag(name = "Пользователи")
-    )
-    @Operation(
-            summary = "updateUserImage",
-            description = "updateUserImage"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "OK",
-                    content = @Content(mediaType = "application/json")
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Not found"
-            )
-    }
-    )
+
+
+
     @PatchMapping(value ="/me/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateUserImage(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) {
         UserDTO userDTO = new UserDTO();
         return ResponseEntity.ok().build();
     }
