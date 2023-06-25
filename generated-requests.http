@@ -142,3 +142,11 @@ Authorization: Basic user@gmail.com password
 {
   "text": "C:/User/Image/pic.jpg"
 }
+###
+PATCH http://localhost:8080/users/me/image
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
+
+{
+"text": "C:/User/Image/pic.jpg"
+}

@@ -24,15 +24,15 @@ import java.io.File;
 public class UserController {
 
 
-/**Изменение пароля пользователя */
+/** 1. Изменение пароля пользователя */
     @PostMapping("/set_password")
-    public ResponseEntity<?> setPassword(@RequestBody String newPassword) {
+    public ResponseEntity<?> setPassword(@RequestBody PasswordDTO newPassword) {
         PasswordDTO passwordDTO = new PasswordDTO();
-        return ResponseEntity.status(HttpStatus.CREATED).body(passwordDTO);
+        return ResponseEntity.ok(passwordDTO);
     }
 
 
-    /**Получение информации о пользователе */
+    /** 2. Получение информации о пользователе */
     @GetMapping("/me")
     public ResponseEntity<?> getUser() {
         UserDTO userDTO = new UserDTO();
@@ -40,14 +40,14 @@ public class UserController {
     }
 
 
-    /**Изменение информации о пользователе */
+    /** 3. Изменение информации о пользователе */
     @PatchMapping("/me")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok().body(userDTO);
+    public ResponseEntity<?> updateUser(@RequestBody UserUpdateReq userUpdateReq) {
+        return ResponseEntity.ok().body(userUpdateReq);
     }
 
 
-    /**Загрузка аватара пользователя */
+    /** 4. Загрузка аватара пользователя */
     @PatchMapping(value ="/me/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) {
         UserDTO userDTO = new UserDTO();
