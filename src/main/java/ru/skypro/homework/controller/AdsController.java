@@ -42,29 +42,19 @@ public class AdsController {
 
     /** 10. Удаление объявления */
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteAd(@PathVariable Long id) {
+    public ResponseEntity<?> removeAd(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
+    /** 11. Полчение комментариев объявления */
     @GetMapping("/{id}/comments")
     public ResponseEntity<Comments> getComments(@PathVariable(name = "id") int adId) {
         return ResponseEntity.ok().body(new Comments());
     }
-
+    /** 12. Добавление комментария к объявлению */
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDTO> addComment(@PathVariable(name = "id") int adId, @RequestBody CommentDTO comment) {
         return ResponseEntity.ok(new CommentDTO());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ExtendedAdDTO> getAds(@PathVariable(name = "id") int adId) {
-        return ResponseEntity.ok().body(new ExtendedAdDTO());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAd(@PathVariable(name = "id") int adId) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** 13. Обновление информации об объявлении */
