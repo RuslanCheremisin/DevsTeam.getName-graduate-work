@@ -16,7 +16,7 @@ import java.util.ArrayList;
 @RequestMapping("/ads")
 public class AdsController {
 
-
+    /** 7. Получение всех объявлений */
     @GetMapping()
     public ResponseEntity<?> getAllAds() {
         AdsGetResp resp = new AdsGetResp();
@@ -24,18 +24,20 @@ public class AdsController {
         return ResponseEntity.ok().body(resp);
     }
 
+    /** 8. Добавление объявления */
+    @PostMapping()
+    public ResponseEntity<?> addAd(@RequestBody AdsAddReq req) {
+        AdDTO adDTO = new AdDTO();
+        return ResponseEntity.status(HttpStatus.CREATED).body(adDTO);
+    }
+    /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
     public ResponseEntity<?> getAds(@PathVariable Integer id) {
         ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO();
         return ResponseEntity.ok().body(extendedAdDTO);
     }
 
-    @PostMapping()
-    public ResponseEntity<?> addAd(@RequestBody AdsAddReq req) {
-        AdDTO adDTO = new AdDTO();
-        return ResponseEntity.status(HttpStatus.CREATED).body(adDTO);
-    }
-
+    /** 10. Удаление объявления */
     @DeleteMapping("{id}")
     public ResponseEntity<?> removeAd(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
