@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,9 @@ import java.io.File;
 
 
 @CrossOrigin(value = "http://localhost:3000")
+@Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
 
@@ -49,7 +51,7 @@ public class UserController {
             )
     }
     )
-    @PostMapping("/users/set_password")
+    @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody String newPassword) {
         PasswordDTO passwordDTO = new PasswordDTO();
         return ResponseEntity.status(HttpStatus.CREATED).body(passwordDTO);
@@ -82,7 +84,7 @@ public class UserController {
             )
     }
     )
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     public ResponseEntity<?> getUser() {
         UserDTO userDTO = new UserDTO();
         return ResponseEntity.ok().body(userDTO);
@@ -119,7 +121,7 @@ public class UserController {
             )
     }
     )
-    @PatchMapping("/users/me")
+    @PatchMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok().body(userDTO);
     }
@@ -142,7 +144,7 @@ public class UserController {
             )
     }
     )
-    @PatchMapping(value ="/users/me/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value ="/me/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("file") MultipartFile file) {
         UserDTO userDTO = new UserDTO();
         return ResponseEntity.ok().build();
