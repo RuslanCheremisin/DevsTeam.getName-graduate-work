@@ -24,7 +24,7 @@ import java.io.File;
 public class UserController {
 
 
-
+/**Изменение пароля пользователя */
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody String newPassword) {
         PasswordDTO passwordDTO = new PasswordDTO();
@@ -32,7 +32,7 @@ public class UserController {
     }
 
 
-
+    /**Получение информации о пользователе */
     @GetMapping("/me")
     public ResponseEntity<?> getUser() {
         UserDTO userDTO = new UserDTO();
@@ -40,14 +40,14 @@ public class UserController {
     }
 
 
-
+    /**Изменение информации о пользователе */
     @PatchMapping("/me")
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok().body(userDTO);
     }
 
 
-
+    /**Загрузка аватара пользователя */
     @PatchMapping(value ="/me/image",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile file) {
         UserDTO userDTO = new UserDTO();
