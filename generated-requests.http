@@ -101,17 +101,52 @@ GET http://localhost:8080/ads
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
-###
-GET http://localhost:8080/ads/1
+
+
+### 13
+PATCH http://localhost:8080/ads/1
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
-###
-DELETE http://localhost:8080/ads/1
+{
+  "title": "Sall",
+  "description": "Абра ка дабра и всякое фуфло",
+  "price": 200
+}
+
+### 14
+DELETE http://localhost:8080/ads/1/comments/1
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
+
+### 15
+PATCH http://localhost:8080/ads/1/comments/1
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
+
+{
+  "text": "Абра ка дабра и всякое фуфло"
+}
+
+### 16
+GET http://localhost:8080/ads/me
 Content-Type: application/json
 Authorization: Basic user@gmail.com password
 
 
+### 17
+PATCH http://localhost:8080/ads/1/image
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
 
+{
+  "text": "C:/User/Image/pic.jpg"
+}
+###
+PATCH http://localhost:8080/users/me/image
+Content-Type: application/json
+Authorization: Basic user@gmail.com password
 
-
+{
+"text": "C:/User/Image/pic.jpg"
+}
