@@ -1,22 +1,32 @@
 package ru.skypro.homework.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
 
-    public String email;
-    public String firstName;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "firstName")
+    private String firstName;
     @Id
-    public int id;
-    public String lastname;
-    public String phone;
-    public String regDate;
-    public String city;
-    public String image;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+    @Column(name = "lastName")
+    private String lastname;
+    @Column(name = "phone")
+    private String phone;
+    @Column(name = "regDate")
+    private String regDate;
+    @Column(name = "city")
+    private String city;
 
-    public User(String email, String firstName, int id, String lastname, String phone, String regDate, String city, String image) {
+    @Column(name = "image")
+    private String image;
+
+    public User(String email, String firstName, Long id, String lastname, String phone, String regDate, String city, String image) {
         this.email = email;
         this.firstName = firstName;
         this.id = id;
@@ -56,11 +66,11 @@ public class User {
         this.firstName = firstName;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
