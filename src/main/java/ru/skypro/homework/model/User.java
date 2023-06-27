@@ -8,18 +8,25 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
 
-    @Column(name = "email")
-    private String email;
-    @Column(name = "firstName")
-    private String firstName;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
+    @Column(name = "email")
+    private String email;
+
+    @Column(name="password")
+    private String password;
+
+    @Column(name = "firstName")
+    private String firstName;
+
     @Column(name = "lastName")
     private String lastname;
+
     @Column(name = "phone")
     private String phone;
+
     @Column(name="Role")
     @Enumerated(EnumType.STRING)
     Role role;
@@ -27,19 +34,24 @@ public class User {
     //List<Ad> ads = new ArrayList<>();
     @Column(name = "image")
     private String image;
-
-    public User(String email, String firstName, Long id, String lastname, String phone, String image) {
+    public User(String email, String password, String firstName, String lastName, String phone, Role role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastname = lastName;
+        this.phone = phone;
+        this.role = role;
+    }
+    public User(Integer id, String email, String firstName, String lastname, String phone, String image) {
+        this.id = id;
         this.email = email;
         this.firstName = firstName;
-        this.id = id;
         this.lastname = lastname;
         this.phone = phone;
         this.image = image;
     }
-
     public User() {
     }
-
     public User(String email, String firstName, String lastname, String phone, String image) {
         this.email = email;
         this.firstName = firstName;
@@ -47,7 +59,6 @@ public class User {
         this.phone = phone;
         this.image = image;
     }
-
     public String getEmail() {
         return email;
     }
@@ -64,11 +75,11 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -90,6 +101,14 @@ public class User {
 
     public String getImage() {
         return image;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public void setImage(String image) {
