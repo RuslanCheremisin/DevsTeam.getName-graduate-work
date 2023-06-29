@@ -10,43 +10,30 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
-    @Column(name = "email")
+    private Integer userId;
     private String email;
-
-    @Column(name="password")
     private String password;
-
-    @Column(name = "firstName")
     private String firstName;
-
-    @Column(name = "lastName")
-    private String lastname;
-
-    @Column(name = "phone")
+    private String lastName;
     private String phone;
-
-    @Column(name="Role")
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Role role;
     //OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     //List<Ad> ads = new ArrayList<>();
-    @Column(name = "image")
     private String image;
     public User(String email, String password, String firstName, String lastName, String phone, Role role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
-        this.lastname = lastName;
+        this.lastName = lastName;
         this.phone = phone;
         this.role = role;
     }
-    public User(Integer id, String email, String firstName, String lastname, String phone, String image) {
-        this.id = id;
+    public User(Integer userId, String email, String firstName, String lastname, String phone, String image) {
+        this.userId = userId;
         this.email = email;
         this.firstName = firstName;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.phone = phone;
         this.image = image;
     }
@@ -55,7 +42,7 @@ public class User {
     public User(String email, String firstName, String lastname, String phone, String image) {
         this.email = email;
         this.firstName = firstName;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.phone = phone;
         this.image = image;
     }
@@ -75,20 +62,20 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setUserId(Integer id) {
+        this.userId = id;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhone() {

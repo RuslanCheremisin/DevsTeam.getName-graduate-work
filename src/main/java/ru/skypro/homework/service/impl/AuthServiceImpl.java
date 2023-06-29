@@ -14,10 +14,13 @@ public class AuthServiceImpl implements AuthService {
 
   private final UserDetailsManager manager;
 
+  private final UserService userService;
+
   private final PasswordEncoder encoder;
 
-  public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder passwordEncoder) {
+  public AuthServiceImpl(UserDetailsManager manager, UserService userService, PasswordEncoder passwordEncoder) {
     this.manager = manager;
+    this.userService = userService;
     this.encoder = passwordEncoder;
   }
 
@@ -35,13 +38,14 @@ public class AuthServiceImpl implements AuthService {
     if (manager.userExists(registerReq.getUsername())) {
       return false;
     }
-    manager.createUser(
+        manager.createUser(
         User.builder()
             .passwordEncoder(this.encoder::encode)
             .password(registerReq.getPassword())
             .username(registerReq.getUsername())
             .roles(role.name())
             .build());
+    userService.saveRegisteredUser(registerReq, role);
     return true;
   }
 }

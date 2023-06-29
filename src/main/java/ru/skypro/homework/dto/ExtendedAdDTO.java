@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExtendedAdDTO {
-    Integer id;
+    Integer adId;
     String authorFirstName;
     String authorLastName;
     String description;
