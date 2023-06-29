@@ -9,6 +9,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 
@@ -80,8 +81,11 @@ public class UserService {
      * @param passwordDTO   новый пароль
      *
      */
-    public boolean updateUserPassword(PasswordDTO passwordDTO) {
+    public boolean updateUserPassword(PasswordDTO passwordDTO) throws UnauthorizedException {
         User user = getAuthUser();
+        if (user == null){
+            throw new UnauthorizedException();
+        }
         String username = user.getEmail();
         user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
         userRepository.save(user);
@@ -95,8 +99,11 @@ public class UserService {
      * Обновление данных пользователя
      * @param req
      */
-    public void updateUser(UserUpdateReq req){
+    public void updateUser(UserUpdateReq req) throws UnauthorizedException {
         User user = getAuthUser();
+        if (user == null){
+            throw new UnauthorizedException();
+        }
         user.setFirstName(req.getFirstName());
         user.setLastName(req.getLastName());
         user.setPhone(req.getPhone());
@@ -107,8 +114,11 @@ public class UserService {
      * Получает авторизированного пользователя
      * @return объект UserDTO
      */
-    public UserDTO getUser(){
+    public UserDTO getUser() throws UnauthorizedException {
         User user = getAuthUser();
+        if (user == null){
+            throw new UnauthorizedException();
+        }
         return userToUserDTO(user);
     }
 
@@ -118,8 +128,11 @@ public class UserService {
      * @param file новый автар
      * @return
      */
-    public boolean updateUserImage(MultipartFile file){
+    public boolean updateUserImage(MultipartFile file) throws UnauthorizedException {
         User user = getAuthUser();
+        if (user == null){
+            throw new UnauthorizedException();
+        }
         Integer userId = user.getUserId();
         File tempFile = new File("src/main/resources/images/", String.valueOf(userId)+"."+"jpg");
         try (OutputStream os = new FileOutputStream(tempFile)) {
