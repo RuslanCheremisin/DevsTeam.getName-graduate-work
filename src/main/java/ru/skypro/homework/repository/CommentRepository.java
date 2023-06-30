@@ -6,8 +6,8 @@ import ru.skypro.homework.model.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    Comment findCommentByAdId(Integer adId, Long commentId);
+    Comment findCommentByAdIdAAndCommentId(Integer adId, Long commentId);
 
-    void deleteByIdAndAdId(Integer adId, Long commentId);
+    void deleteByAdIdAAndCommentId(Integer adId, Long commentId);
 
 }

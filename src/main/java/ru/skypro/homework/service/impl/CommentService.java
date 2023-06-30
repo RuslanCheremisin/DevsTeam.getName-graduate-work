@@ -69,14 +69,14 @@ public class CommentService {
 
     /** 5. Удаление комментария. */
     public void deleteCommentById(Integer adId, Long commentId){
-        if (commentRepository.findCommentByAdId(adId, commentId) != null) {
-            commentRepository.deleteByIdAndAdId(adId, commentId);
+        if (commentRepository.findCommentByAdIdAAndCommentId(adId, commentId) != null) {
+            commentRepository.deleteByAdIdAAndCommentId(adId, commentId);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
     /** 6. Обновление комментария */
     public CommentDTO updateCommentById(Integer adId, Long commentId, CreateOrUpdateComment newText) {
-        Comment comment = commentRepository.findCommentByAdId(adId, commentId);
+        Comment comment = commentRepository.findCommentByAdIdAAndCommentId(adId, commentId);
         if (comment != null) {
             comment.setText(newText.getText());
             commentRepository.save(comment);
