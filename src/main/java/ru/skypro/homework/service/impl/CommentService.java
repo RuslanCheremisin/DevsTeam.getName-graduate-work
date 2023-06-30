@@ -1,12 +1,17 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.model.Comment;
+import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.UserRepository;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,12 +20,14 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository) {
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
-    /** Преобразование сущности Comment  в  DTO */
+    /** 1. Преобразование сущности Comment  в  DTO */
     public CommentDTO commentToCommentDTO(Comment comment) {
         return new CommentDTO(comment.getAuthor(), comment.getAuthorImage(), comment.getAuthorFirstName(),
                               comment.getCreatedAt(),
@@ -28,7 +35,7 @@ public class CommentService {
                               comment.getText());
     }
 
-    /** Преобразование DTO в сущность Comment  */
+    /** 2. Преобразование DTO в сущность Comment  */
     public Comment commentDTOtoComment (CommentDTO commentDTO) {
         return new Comment(commentDTO.getCommentId(),
                 commentDTO.getAuthor(), commentDTO.getAuthorImage(), commentDTO.getAuthorFirstName(),
@@ -36,31 +43,45 @@ public class CommentService {
                 commentDTO.getText());
     }
 
-    /** Получение комментариев объявления */
+    /** 3. Получение комментариев объявления */
     public CommentsDTO getCommentsOfAd(Integer adId) {
         List<Comment> commentList = commentRepository.findAllById(Collections.singleton(adId));
         List<CommentDTO> commentsDTOList = commentList.stream()
                 .map(e -> commentToCommentDTO(e))
                 .collect(Collectors.toList());
-        CommentsDTO commentsDTO = new CommentsDTO(commentsDTOList.size(), commentsDTOList) ;
-        return commentsDTO;
+        return new CommentsDTO(commentsDTOList.size(), commentsDTOList);
     }
 
-    /** Добавление комментария к объявлению */
-    public CommentDTO addCommentToAd(Integer adId,CommentDTO comment) {
-
-
-        return null;
+    /** 4. Добавление комментария к объявлению */
+    public CommentDTO addCommentToAd(Integer adId,CreateOrUpdateComment textComment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        User user = userRepository.findUserByEmail(currentPrincipalName);
+        Comment comment = new Comment(adId,
+                user.getUserId(),
+                user.getImage(),
+                user.getFirstName(),
+                Instant.now().toEpochMilli(), //дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
+                textComment.getText());
+        commentRepository.save(comment);
+        return commentToCommentDTO(comment);
     }
 
-    /** Удаление комментария. */
-    public boolean deleteCommentById(Integer adId, Integer commentId){
-        return false;
+    /** 5. Удаление комментария. */
+    public void deleteCommentById(Integer adId, Long commentId){
+        if (commentRepository.findCommentByAdId(adId, commentId) != null) {
+            commentRepository.deleteByIdAndAdId(adId, commentId);
+        } else throw new RuntimeException("Такой комментарий не найден");
     }
 
-    /** Обновление комментария */
-    public boolean updateCommentById(Integer adId, Integer commentId, CreateOrUpdateComment newText) {
-        return false;
+    /** 6. Обновление комментария */
+    public CommentDTO updateCommentById(Integer adId, Long commentId, CreateOrUpdateComment newText) {
+        Comment comment = commentRepository.findCommentByAdId(adId, commentId);
+        if (comment != null) {
+            comment.setText(newText.getText());
+            commentRepository.save(comment);
+          return commentToCommentDTO(comment);
+        } else throw new RuntimeException("Такой комментарий не найден");
     }
 
 

@@ -57,8 +57,8 @@ public class AdsController {
     /** 12. Добавление комментария к объявлению */
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDTO> addComment(@PathVariable(name = "id") Integer adId,
-                                                 @RequestBody CommentDTO comment) {
-        return ResponseEntity.ok(new CommentDTO());
+                                                 @RequestBody CreateOrUpdateComment text) {
+        return ResponseEntity.ok().body(commentService.addCommentToAd(adId, text));
     }
 
     /** 13. Обновление информации об объявлении */
@@ -71,16 +71,17 @@ public class AdsController {
     /** 14. Удаление комментария. */
     @DeleteMapping("{id}/comments/{idCom}")
     public ResponseEntity<?> deleteComments(@PathVariable Integer adId,
-                                            @PathVariable Integer commentId){
+                                            @PathVariable Long commentId){
+        commentService.deleteCommentById(adId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** 15. Обновление комментария */
     @PatchMapping("{id}/comments/{idCom}")
     public ResponseEntity<?> updateComments(@PathVariable Integer adId,
-                                            @PathVariable Integer commentId,
+                                            @PathVariable Long commentId,
                                             @RequestBody CreateOrUpdateComment newText) {
-        return ResponseEntity.ok().body(newText);
+        return ResponseEntity.ok().body(commentService.updateCommentById(adId, commentId, newText));
     }
 
     /** 16. Получение объявлений авторизованного пользователя */
