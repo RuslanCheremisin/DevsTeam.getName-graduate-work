@@ -45,7 +45,7 @@ public class CommentService {
 
     /** 3. Получение комментариев объявления */
     public CommentsDTO getCommentsOfAd(Integer adId) {
-        List<Comment> commentList = commentRepository.findAllById(Collections.singleton(adId));
+        List<Comment> commentList = commentRepository.findCommentsByAdId(adId);
         List<CommentDTO> commentsDTOList = commentList.stream()
                 .map(e -> commentToCommentDTO(e))
                 .collect(Collectors.toList());
@@ -69,14 +69,14 @@ public class CommentService {
 
     /** 5. Удаление комментария. */
     public void deleteCommentById(Integer adId, Long commentId){
-        if (commentRepository.findCommentByAdIdAAndCommentId(adId, commentId) != null) {
-            commentRepository.deleteByAdIdAAndCommentId(adId, commentId);
+        if (commentRepository.findCommentByAdIdAndCommentId(adId, commentId) != null) {
+            commentRepository.deleteByAdIdAndCommentId(adId, commentId);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
     /** 6. Обновление комментария */
     public CommentDTO updateCommentById(Integer adId, Long commentId, CreateOrUpdateComment newText) {
-        Comment comment = commentRepository.findCommentByAdIdAAndCommentId(adId, commentId);
+        Comment comment = commentRepository.findCommentByAdIdAndCommentId(adId, commentId);
         if (comment != null) {
             comment.setText(newText.getText());
             commentRepository.save(comment);
