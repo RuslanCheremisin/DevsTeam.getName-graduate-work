@@ -38,7 +38,7 @@ public class AdsController {
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
-    public ResponseEntity<?> getAds(@PathVariable Integer adId) {
+    public ResponseEntity<?> getAds(@PathVariable Integer id) {
         ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO();
         return ResponseEntity.ok().body(extendedAdDTO);
     }
@@ -63,23 +63,23 @@ public class AdsController {
 
     /** 13. Обновление информации об объявлении */
     @PatchMapping("{id}")
-    public ResponseEntity<?> updateAds(@PathVariable Integer adId,
+    public ResponseEntity<?> updateAds(@PathVariable Integer id,
                                        @RequestBody CreateOrUpdateAd newAdReg) {
         return ResponseEntity.ok().body(newAdReg);
     }
 
     /** 14. Удаление комментария. */
-    @DeleteMapping("{id}/comments/{idCom}")
+    @DeleteMapping("{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComments(@PathVariable Integer adId,
-                                            @PathVariable Long commentId){
+                                            @PathVariable Integer commentId){
         commentService.deleteCommentById(adId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** 15. Обновление комментария */
-    @PatchMapping("{id}/comments/{idCom}")
+    @PatchMapping("{adId}/comments/{commentId}")
     public ResponseEntity<?> updateComments(@PathVariable Integer adId,
-                                            @PathVariable Long commentId,
+                                            @PathVariable Integer commentId,
                                             @RequestBody CreateOrUpdateComment newText) {
         return ResponseEntity.ok().body(commentService.updateCommentById(adId, commentId, newText));
     }
@@ -93,7 +93,7 @@ public class AdsController {
 
     /** 17. Обновление картинки объявления */
     @PatchMapping("{id}/image")
-    public ResponseEntity<?> updateImage(@PathVariable Integer adId,
+    public ResponseEntity<?> updateImage(@PathVariable Integer id,
                                          @RequestBody String newPart) {
         return ResponseEntity.ok().body(newPart);
     }

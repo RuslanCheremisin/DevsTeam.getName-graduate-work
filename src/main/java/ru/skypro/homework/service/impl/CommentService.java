@@ -12,7 +12,6 @@ import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +36,7 @@ public class CommentService {
 
     /** 2. Преобразование DTO в сущность Comment  */
     public Comment commentDTOtoComment (CommentDTO commentDTO) {
-        return new Comment(commentDTO.getCommentId(),
+        return new Comment(commentDTO.getPk(),
                 commentDTO.getAuthor(), commentDTO.getAuthorImage(), commentDTO.getAuthorFirstName(),
                 commentDTO.getCreatedAt(),
                 commentDTO.getText());
@@ -68,14 +67,14 @@ public class CommentService {
     }
 
     /** 5. Удаление комментария. */
-    public void deleteCommentById(Integer adId, Long commentId){
+    public void deleteCommentById(Integer adId, Integer commentId){
         if (commentRepository.findCommentByAdIdAndCommentId(adId, commentId) != null) {
             commentRepository.deleteByAdIdAndCommentId(adId, commentId);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
     /** 6. Обновление комментария */
-    public CommentDTO updateCommentById(Integer adId, Long commentId, CreateOrUpdateComment newText) {
+    public CommentDTO updateCommentById(Integer adId, Integer commentId, CreateOrUpdateComment newText) {
         Comment comment = commentRepository.findCommentByAdIdAndCommentId(adId, commentId);
         if (comment != null) {
             comment.setText(newText.getText());

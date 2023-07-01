@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long commentId;
+    Integer commentId;
     Integer adId;
     Integer author;
     String authorImage;
@@ -21,9 +21,8 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Long commentId,
-                   Integer author, String authorImage, String authorFirstName,
-                   Long createdAt, String text) {
+    public Comment(Integer commentId,
+                   String authorImage, Integer author, String authorFirstName, Long createdAt, String text) {
         this.commentId = commentId;
         this.author = author;
         this.authorImage = authorImage;
@@ -32,8 +31,7 @@ public class Comment {
         this.text = text;
     }
 
-    public Comment(Long commentId, Integer adId,
-                   Integer author, String authorImage, String authorFirstName,
+    public Comment(Integer adId, Integer author, String authorImage, Integer commentId,  String authorFirstName,
                    Long createdAt, String text) {
         this.commentId = commentId;
         this.adId = adId;
@@ -55,11 +53,11 @@ public class Comment {
 
     // Get & Set ---------------------------------------
 
-    public Long getCommentId() {
+    public Integer getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(Long commentId) {
+    public void setCommentId(Integer commentId) {
         this.commentId = commentId;
     }
 

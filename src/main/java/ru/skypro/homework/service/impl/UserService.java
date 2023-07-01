@@ -134,7 +134,7 @@ public class UserService {
             throw new UnauthorizedException();
         }
         Integer userId = user.getUserId();
-        File tempFile = new File("src/main/resources/images/", String.valueOf(userId)+"."+"jpg");
+        File tempFile = new File("src/images/", String.valueOf(userId)+"."+"jpg");
         try (OutputStream os = new FileOutputStream(tempFile)) {
             os.write(file.getBytes());
         } catch (FileNotFoundException e) {
