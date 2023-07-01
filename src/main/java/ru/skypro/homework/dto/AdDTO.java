@@ -6,7 +6,7 @@ import lombok.Data;
 public class AdDTO {
     Integer author;
     String image;
-    Integer adId;
+    Integer pk;
     Integer price;
     String title;
 }
