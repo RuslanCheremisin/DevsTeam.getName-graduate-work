@@ -9,4 +9,15 @@ public class AdDTO {
     Integer pk;
     Integer price;
     String title;
+
+    public AdDTO(Integer author, String image, Integer pk, Integer price, String title) {
+        this.author = author;
+        this.image = image;
+        this.pk = pk;
+        this.price = price;
+        this.title = title;
+    }
+
+    public AdDTO() {
+    }
 }

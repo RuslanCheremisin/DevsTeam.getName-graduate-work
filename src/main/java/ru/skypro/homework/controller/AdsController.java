@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.CommentService;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class AdsController {
 
     private final CommentService commentService;
+    private final AdService adService;
 
     /** 7. Получение всех объявлений */
     @GetMapping()
@@ -31,16 +34,16 @@ public class AdsController {
     }
 
     /** 8. Добавление объявления */
-    @PostMapping()
-    public ResponseEntity<?> addAd(@RequestBody AdsAddReq req) {
-        AdDTO adDTO = new AdDTO();
-        return ResponseEntity.status(HttpStatus.CREATED).body(adDTO);
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile file, @RequestBody CreateOrUpdateAd createOrUpdateAd) {
+//        AdDTO adDTO = new AdDTO();
+        return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(createOrUpdateAd, file));
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
-    public ResponseEntity<?> getAds(@PathVariable Integer id) {
-        ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO();
-        return ResponseEntity.ok().body(extendedAdDTO);
+    public ResponseEntity<?> getAd(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(adService.getAd(id));
     }
 
     /** 10. Удаление объявления */
