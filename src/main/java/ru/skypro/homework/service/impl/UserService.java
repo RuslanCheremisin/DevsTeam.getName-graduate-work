@@ -13,6 +13,7 @@ import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -134,7 +135,7 @@ public class UserService {
             throw new UnauthorizedException();
         }
         Integer userId = user.getUserId();
-        File tempFile = new File("src/images/", String.valueOf(userId)+"."+"jpg");
+        File tempFile = new File("src/users/images/", String.valueOf(userId)+".jpg");
         try (OutputStream os = new FileOutputStream(tempFile)) {
             os.write(file.getBytes());
         } catch (FileNotFoundException e) {
@@ -142,9 +143,20 @@ public class UserService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        user.setImage(tempFile.getPath());
+        user.setImage("/users/images/"+userId);
         userRepository.save(user);
         return true;
     }
 
+    /**
+     *  Отдает автар пользователя в виде массива байтов
+     * @param id Идентификатор пользователя
+     * @return массив байтов
+     * @throws IOException
+     */
+    public byte[] getUserImage (Integer id) throws IOException {
+        User user = userRepository.findById(id).orElseThrow();
+        String path =  user.getImage();
+        return Files.readAllBytes(Path.of("src/users/images/"+user.getUserId()+".jpg"));
+    }
 }
