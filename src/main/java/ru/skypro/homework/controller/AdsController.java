@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.service.impl.CommentService;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 @RequestMapping("/ads")
 public class AdsController {
+
+    private final CommentService commentService;
 
     /** 7. Получение всех объявлений */
     @GetMapping()
@@ -35,48 +38,50 @@ public class AdsController {
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
-    public ResponseEntity<?> getAds(@PathVariable Integer id) {
+    public ResponseEntity<?> getAds(@PathVariable Integer adId) {
         ExtendedAdDTO extendedAdDTO = new ExtendedAdDTO();
         return ResponseEntity.ok().body(extendedAdDTO);
     }
 
     /** 10. Удаление объявления */
     @DeleteMapping("{id}")
-    public ResponseEntity<?> removeAd(@PathVariable Long id) {
+    public ResponseEntity<?> removeAd(@PathVariable Integer adId) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /** 11. Полчение комментариев объявления */
+    /** 11. Получение комментариев объявления */
     @GetMapping("/{id}/comments")
-    public ResponseEntity<Comments> getComments(@PathVariable(name = "id") int adId) {
-        return ResponseEntity.ok().body(new Comments());
+    public ResponseEntity<CommentsDTO> getComments(@PathVariable(name = "id") Integer adId) {
+        return ResponseEntity.ok().body(commentService.getCommentsOfAd(adId));
     }
     /** 12. Добавление комментария к объявлению */
     @PostMapping("/{id}/comments")
-    public ResponseEntity<CommentDTO> addComment(@PathVariable(name = "id") int adId, @RequestBody CommentDTO comment) {
-        return ResponseEntity.ok(new CommentDTO());
+    public ResponseEntity<CommentDTO> addComment(@PathVariable(name = "id") Integer adId,
+                                                 @RequestBody CreateOrUpdateComment text) {
+        return ResponseEntity.ok().body(commentService.addCommentToAd(adId, text));
     }
 
     /** 13. Обновление информации об объявлении */
     @PatchMapping("{id}")
-    public ResponseEntity<?> updateAds(@PathVariable Integer id,
+    public ResponseEntity<?> updateAds(@PathVariable Integer adId,
                                        @RequestBody CreateOrUpdateAd newAdReg) {
-        return ResponseEntity.ok().body(newAdReg); //new AdsAddReq()
+        return ResponseEntity.ok().body(newAdReg);
     }
 
     /** 14. Удаление комментария. */
     @DeleteMapping("{id}/comments/{idCom}")
-    public ResponseEntity<?> deleteComments(@PathVariable Integer id,
-                                            @PathVariable Long idCom){
+    public ResponseEntity<?> deleteComments(@PathVariable Integer adId,
+                                            @PathVariable Long commentId){
+        commentService.deleteCommentById(adId, commentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /** 15. Обновление комментария */
     @PatchMapping("{id}/comments/{idCom}")
-    public ResponseEntity<?> updateComments(@PathVariable Integer id,
-                                            @PathVariable Long idCom,
-                                            @RequestBody CreateOrUpdateComment newText) {  //CreateOrUpdateComment -> CommentDTO()
-        return ResponseEntity.ok().body(newText);
+    public ResponseEntity<?> updateComments(@PathVariable Integer adId,
+                                            @PathVariable Long commentId,
+                                            @RequestBody CreateOrUpdateComment newText) {
+        return ResponseEntity.ok().body(commentService.updateCommentById(adId, commentId, newText));
     }
 
     /** 16. Получение объявлений авторизованного пользователя */
@@ -88,7 +93,7 @@ public class AdsController {
 
     /** 17. Обновление картинки объявления */
     @PatchMapping("{id}/image")
-    public ResponseEntity<?> updateImage(@PathVariable Integer id,
+    public ResponseEntity<?> updateImage(@PathVariable Integer adId,
                                          @RequestBody String newPart) {
         return ResponseEntity.ok().body(newPart);
     }
