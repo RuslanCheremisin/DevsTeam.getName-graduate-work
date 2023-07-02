@@ -49,7 +49,7 @@ public class AdService {
             throw new UnauthorizedException();
         }
         Ad ad = new Ad(user.getUserId(), "image", createOrUpdateAd.getDescription(), createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
-        File tempFile = new File(pathToAdImages, ad.getPk() + "_ad_image.jpeg");
+        File tempFile = new File(pathToAdImages, ad.getDescription() + "_ad_image.jpeg");
         try(FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(file.getBytes());
         } catch(FileNotFoundException e){

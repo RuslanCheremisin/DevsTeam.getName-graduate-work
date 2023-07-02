@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.impl.AdService;
@@ -29,17 +28,15 @@ public class AdsController {
     /** 7. Получение всех объявлений */
     @GetMapping()
     public ResponseEntity<?> getAllAds() {
-        AdsGetResp resp = new AdsGetResp();
-        resp.setResult(new ArrayList<>());
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok().body(adService.getAds());
     }
 
     /** 8. Добавление объявления */
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile file, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
+    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile photo, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
 //        AdDTO adDTO = new AdDTO();
-        return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(createOrUpdateAd, file));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(createOrUpdateAd, photo));
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
