@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.CommentService;
@@ -36,7 +37,7 @@ public class AdsController {
     /** 8. Добавление объявления */
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile file, @RequestBody CreateOrUpdateAd createOrUpdateAd) {
+    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile file, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
 //        AdDTO adDTO = new AdDTO();
         return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(createOrUpdateAd, file));
     }

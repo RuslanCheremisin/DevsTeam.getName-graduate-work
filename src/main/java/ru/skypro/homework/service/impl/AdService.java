@@ -7,12 +7,12 @@ import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAdDTO;
+import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -43,19 +43,21 @@ public class AdService {
         return adTOExtended(ad);
     }
 
-    public Ad addAd(CreateOrUpdateAd createOrUpdateAd, MultipartFile file){
+    public Ad addAd(CreateOrUpdateAd createOrUpdateAd, MultipartFile file) throws UnauthorizedException {
         User user = userService.getAuthUser();
-        Ad ad = new Ad(user.getUserId(), "image", createOrUpdateAd.getDescription(), createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
-        try {
-            init();
-            byte[] bytes = file.getBytes();
-            FileOutputStream fos = new FileOutputStream(pathToAdImages+"/"+ad.getPk()+"_ad_image.jpeg");
-            fos.write(bytes);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(user==null){
+            throw new UnauthorizedException();
         }
-        ad.setImage(pathToAdImages+"/"+ad.getPk()+"_ad_image.jpeg");
+        Ad ad = new Ad(user.getUserId(), "image", createOrUpdateAd.getDescription(), createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
+        File tempFile = new File(pathToAdImages, ad.getPk() + "_ad_image.jpeg");
+        try(FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(file.getBytes());
+        } catch(FileNotFoundException e){
+            throw new RuntimeException("File not found!");
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
+        ad.setImage(tempFile.getPath());
         return adRepository.save(ad);
     }
 
