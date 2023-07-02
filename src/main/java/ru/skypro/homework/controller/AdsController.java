@@ -94,8 +94,8 @@ public class AdsController {
     /** 17. Обновление картинки объявления */
     @PatchMapping("{id}/image")
     public ResponseEntity<?> updateImage(@PathVariable Integer id,
-                                         @RequestBody String newPart) {
-        return ResponseEntity.ok().body(newPart);
+                                         @RequestParam("image") MultipartFile file) {
+        return ResponseEntity.ok().body(file);
     }
 
 }
