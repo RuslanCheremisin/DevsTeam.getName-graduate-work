@@ -36,7 +36,8 @@ public class AdsController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ad> addAd(@RequestParam MultipartFile photo, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
 //        AdDTO adDTO = new AdDTO();
-        return ResponseEntity.status(HttpStatus.CREATED).body(adService.addAd(createOrUpdateAd, photo));
+
+        return ResponseEntity.ok(adService.addAd(createOrUpdateAd, photo));
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
