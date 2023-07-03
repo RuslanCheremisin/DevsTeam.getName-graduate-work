@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.exception.UnauthorizedException;
-import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.CommentService;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -31,13 +30,13 @@ public class AdsController {
         return ResponseEntity.ok().body(adService.getAds());
     }
 
-    /** 8. Добавление объявления */
+    /**
+     * 8. Добавление объявления
+     */
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile photo, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
-//        AdDTO adDTO = new AdDTO();
-
-        return ResponseEntity.ok(adService.addAd(createOrUpdateAd, photo));
+    public ResponseEntity<AdDTO> addAd(@RequestPart CreateOrUpdateAd properties, @RequestPart("image") MultipartFile image) throws UnauthorizedException {
+        return ResponseEntity.ok(adService.addAd(properties, image));
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
@@ -48,6 +47,7 @@ public class AdsController {
     /** 10. Удаление объявления */
     @DeleteMapping("{id}")
     public ResponseEntity<?> removeAd(@PathVariable Integer adId) {
+        adService.removeAd(adId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -67,7 +67,7 @@ public class AdsController {
     @PatchMapping("{id}")
     public ResponseEntity<?> updateAds(@PathVariable Integer id,
                                        @RequestBody CreateOrUpdateAd newAdReg) {
-        return ResponseEntity.ok().body(newAdReg);
+        return ResponseEntity.ok().body(adService.updateAdInfo(id, newAdReg));
     }
 
     /** 14. Удаление комментария. */
@@ -89,15 +89,20 @@ public class AdsController {
     /** 16. Получение объявлений авторизованного пользователя */
     @GetMapping("/me")
     public ResponseEntity<?> getAdsMe() {
-        AdsGetResp adsGetResp = new AdsGetResp();
-        return ResponseEntity.ok().body(adsGetResp);
+        return ResponseEntity.ok().body(adService.getAllUserAdds());
     }
 
     /** 17. Обновление картинки объявления */
     @PatchMapping("{id}/image")
     public ResponseEntity<?> updateImage(@PathVariable Integer id,
                                          @RequestParam("image") MultipartFile file) {
-        return ResponseEntity.ok().body(file);
+        return ResponseEntity.ok().body(adService.updateAdImage(id, file));
+    }
+
+    /** Отдает массив байтов по ссылке на аватар пользователя */
+    @GetMapping(value ="/images/{id}")
+    public byte[] getAdImage(@PathVariable Integer id) throws IOException {
+        return  adService.getAdImage(id);
     }
 
 }
