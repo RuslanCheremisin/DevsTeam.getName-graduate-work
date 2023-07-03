@@ -9,11 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.exception.UnauthorizedException;
-import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.CommentService;
-
-import java.util.ArrayList;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -34,9 +31,9 @@ public class AdsController {
     /** 8. Добавление объявления */
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ad> addAd(@RequestParam MultipartFile photo, @RequestBody CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
-//        AdDTO adDTO = new AdDTO();
-
+    public ResponseEntity<Ad> addAd(
+            @RequestPart(name = "photo") MultipartFile photo,
+            @RequestPart CreateOrUpdateAd createOrUpdateAd) throws UnauthorizedException {
         return ResponseEntity.ok(adService.addAd(createOrUpdateAd, photo));
     }
     /** 9. Получение информации об объявлении */

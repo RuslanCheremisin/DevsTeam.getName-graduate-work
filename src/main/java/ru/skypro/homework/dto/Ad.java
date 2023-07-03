@@ -3,14 +3,14 @@ package ru.skypro.homework.dto;
 import lombok.Data;
 
 @Data
-public class AdDTO {
+public class Ad {
     Integer author;
     String image;
     Integer pk;
     Integer price;
     String title;
 
-    public AdDTO(Integer author, String image, Integer pk, Integer price, String title) {
+    public Ad(Integer author, String image, Integer pk, Integer price, String title) {
         this.author = author;
         this.image = image;
         this.pk = pk;
@@ -18,6 +18,6 @@ public class AdDTO {
         this.title = title;
     }
 
-    public AdDTO() {
+    public Ad() {
     }
 }
