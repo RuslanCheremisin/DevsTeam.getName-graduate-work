@@ -50,6 +50,11 @@ public class User {
         this.phone = phone;
         this.image = image;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
     public String getEmail() {
         return email;
     }
