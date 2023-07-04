@@ -20,8 +20,11 @@ public class User {
     private String lastName;
     private String phone;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Ad> ads =new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    private List<Comment> comments =new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -29,6 +32,7 @@ public class User {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id")
     private UserImage image;
+
     public User(String email, String password, String firstName, String lastName, String phone, Role role) {
         this.email = email;
         this.password = password;
@@ -53,6 +57,16 @@ public class User {
         this.lastName = lastname;
         this.phone = phone;
         this.image = image;
+    }
+    public List<Comment> getComments() {
+        return comments;
+    }
+    public void setAds(List<Ad> ads) {
+        this.ads = ads;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
     public Role getRole() {

@@ -3,7 +3,13 @@ package ru.skypro.homework.model;
 import lombok.Data;
 import ru.skypro.homework.model.images.AdImage;
 
+import lombok.Data;
+import ru.skypro.homework.model.images.AdImage;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "ads")
@@ -23,6 +29,8 @@ public class Ad {
     private String description;
     private Integer price;
     private String title;
+    @OneToMany(mappedBy = "ad", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Comment> comments =new ArrayList<>();
 
     public Ad(User author, AdImage image, Integer pk, String description, Integer price, String title) {
         this.author = author;
