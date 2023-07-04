@@ -5,10 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-
+//@Data
+@NoArgsConstructor
 public class Ads {
-    Integer count;
-    List<AdDTO> result;
+    private Integer count;
+    private List<AdDTO> result;
 
     public Ads(Integer count, List<AdDTO> result) {
         this.count = count;

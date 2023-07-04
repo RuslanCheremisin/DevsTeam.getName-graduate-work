@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +47,8 @@ public class AdsController {
 
     /** 10. Удаление объявления */
     @DeleteMapping("{id}")
-    public ResponseEntity<?> removeAd(@PathVariable Integer adId) {
-        adService.removeAd(adId);
+    public ResponseEntity<?> removeAd(@PathVariable Integer id) {
+        adService.removeAd(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -99,10 +100,10 @@ public class AdsController {
         return ResponseEntity.ok().body(adService.updateAdImage(id, file));
     }
 
-    /** Отдает массив байтов по ссылке на аватар пользователя */
+    /** Отдает массив байтов по ссылке на картинку объявления */
     @GetMapping(value ="/images/{id}")
-    public byte[] getAdImage(@PathVariable Integer id) throws IOException {
-        return  adService.getAdImage(id);
+    public ResponseEntity<FileSystemResource> getAdImage(@PathVariable Integer id) throws IOException {
+        return ResponseEntity.ok(adService.getAdImage(id));
     }
 
 }
