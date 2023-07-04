@@ -8,11 +8,11 @@ import java.util.List;
 @Data
 public class Ads {
     Integer count;
-    List<AdDTO> result;
+    List<AdDTO> results;
 
-    public Ads(List<AdDTO> result) {
-        this.count = result.size();
-        this.result = result;
+    public Ads(List<AdDTO> results) {
+        this.count = results.size();
+        this.results = results;
     }
 
 }
