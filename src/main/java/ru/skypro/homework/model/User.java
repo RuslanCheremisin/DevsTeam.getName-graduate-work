@@ -29,8 +29,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_image_id")
     private UserImage image;
 
     public User(String email, String password, String firstName, String lastName, String phone, Role role) {

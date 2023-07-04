@@ -34,7 +34,7 @@ public class CommentService {
 
     /** 1. Преобразование сущности Comment  в  DTO */
     public CommentDTO commentToCommentDTO(Comment comment) {
-        return new CommentDTO(comment.getAuthor().getUserId(), comment.getAuthor().getImage(), comment.getAuthor().getFirstName(),
+        return new CommentDTO(comment.getAuthor().getUserId(), comment.getAuthor().getImage().getImageAddress(), comment.getAuthor().getFirstName(),
                               comment.getCreatedAt(),
                               comment.getCommentId(),
                               comment.getText());

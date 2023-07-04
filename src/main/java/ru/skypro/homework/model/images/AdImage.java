@@ -16,7 +16,7 @@ public class AdImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "pk")
+    @JoinColumn(name = "ad_id")
     private Ad ad;
     private String imageAddress;
 

@@ -14,10 +14,9 @@ import javax.persistence.*;
 public class UserImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userId")
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User user;
     private String imageAddress;
 

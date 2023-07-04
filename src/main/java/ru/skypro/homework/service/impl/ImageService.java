@@ -36,12 +36,12 @@ public class ImageService {
         String imageAddress = null;
         if (isUserImage) {
             tempFile = new File(pathToUserImages, id + "_user_image.jpg");
-            imageAddress = pathToUserImages + "/" + id + "_user_image.jpg";
+            imageAddress = pathToUserImages + id + "_user_image.jpg";
             UserImage image = new UserImage(imageAddress);
             userImageRepository.save(image);
         } else {
             tempFile = new File(pathToAdImages, id + "_ad_image.jpg");
-            imageAddress = pathToAdImages + "/" + id + "_ad_image.jpg";
+            imageAddress = pathToAdImages + id + "_ad_image.jpg";
             AdImage image = new AdImage(imageAddress);
             adImageRepository.save(image);
 

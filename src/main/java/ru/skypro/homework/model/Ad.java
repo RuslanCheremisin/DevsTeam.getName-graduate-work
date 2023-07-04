@@ -22,8 +22,8 @@ public class Ad {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id")
+    @OneToOne(targetEntity = AdImage.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "image_id")
     private AdImage image;
 
     private String description;
