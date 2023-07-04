@@ -54,18 +54,17 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAd.getDescription(), "image", createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
 
-        imageService.updateImage(ad.getPk(),file,false);
+        savedAd.setImage(imageService.updateImage(ad.getPk(),file,false));
 
 
-        File tempFile = new File(pathToAdImages, savedAd.getPk() + "_ad_image.jpg");
-        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fos.write(file.getBytes());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found!");
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
-        savedAd.setImage(pathToAdImages + savedAd.getPk() + "_ad_image.jpg");
+//        File tempFile = new File(pathToAdImages, savedAd.getPk() + "_ad_image.jpg");
+//        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+//            fos.write(file.getBytes());
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException("File not found!");
+//        } catch (IOException e) {
+//            throw new RuntimeException();
+//        }
 
         return adToDTO(adRepository.save(savedAd));
     }

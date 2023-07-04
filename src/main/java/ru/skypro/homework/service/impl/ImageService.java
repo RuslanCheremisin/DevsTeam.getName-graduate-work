@@ -29,7 +29,7 @@ public class ImageService {
         this.userImageRepository = userImageRepository;
     }
 
-    public void updateImage(Integer id, MultipartFile file, boolean isUserImage) {
+    public String updateImage(Integer id, MultipartFile file, boolean isUserImage) {
         File tempFile;
         String imageAddress = "";
         if (isUserImage) {
@@ -51,5 +51,6 @@ public class ImageService {
         } catch (IOException e) {
             throw new RuntimeException();
         }
+        return imageAddress;
     }
 }

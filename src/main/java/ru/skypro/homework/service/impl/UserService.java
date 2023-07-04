@@ -25,21 +25,23 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ImageService imageService;
 
 
-
-    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
 
+        this.imageService = imageService;
     }
 
     /**
      * Получает авторизированного пользователя и возвращает его
+     *
      * @return авторизированный пользователь
      */
-    public User getAuthUser(){
+    public User getAuthUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return userRepository.findUserByEmail(currentPrincipalName);
@@ -47,42 +49,46 @@ public class UserService {
 
     /**
      * Преобразование сущности User  в  DTO
+     *
      * @param user объект пользователь из БД
      * @return объект UserDTO
      */
-    public UserDTO userToUserDTO(User user){
+    public UserDTO userToUserDTO(User user) {
         return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
                 user.getImage());
     }
 
     /**
      * Создание пользователя при регистрации
+     *
      * @param req минимальные данные для регистрации
      * @return User
      */
-    public User registerReqToUser(RegisterReq req){
-    return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
-            req.getPhone(), req.getRole());
+    public User registerReqToUser(RegisterReq req) {
+        return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
+                req.getPhone(), req.getRole());
     }
 
     /**
      * Сохраняет пользователя после регистрации в БД
-     * @param req регистрационные данные
+     *
+     * @param req  регистрационные данные
      * @param role роль
      */
-    public void saveRegisteredUser(RegisterReq req, Role role){
+    public void saveRegisteredUser(RegisterReq req, Role role) {
         User user = registerReqToUser(req);
         user.setRole(role);
         userRepository.save(user);
     }
+
     /**
      * Обновление пароля пользователя
-     * @param passwordDTO   новый пароль
      *
+     * @param passwordDTO новый пароль
      */
     public boolean updateUserPassword(PasswordDTO passwordDTO) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         String username = user.getEmail();
@@ -96,11 +102,12 @@ public class UserService {
 
     /**
      * Обновление данных пользователя
+     *
      * @param req
      */
     public void updateUser(UserUpdateReq req) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         user.setFirstName(req.getFirstName());
@@ -111,11 +118,12 @@ public class UserService {
 
     /**
      * Получает авторизированного пользователя
+     *
      * @return объект UserDTO
      */
     public UserDTO getUser() throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         return userToUserDTO(user);
@@ -124,36 +132,39 @@ public class UserService {
 
     /**
      * Принимает файл автара и сохраняет его, ссылку на аватар добавляет в БД
+     *
      * @param file новый автар
      * @return
      */
     public boolean updateUserImage(MultipartFile file) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         Integer userId = user.getUserId();
-        File tempFile = new File("src/main/resources/user_images/", String.valueOf(userId)+".jpg");
-        try (OutputStream os = new FileOutputStream(tempFile)) {
-            os.write(file.getBytes());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        user.setImage("/users/avatar/"+userId);
+
+//        File tempFile = new File("src/main/resources/user_images/", String.valueOf(userId)+".jpg");
+//        try (OutputStream os = new FileOutputStream(tempFile)) {
+//            os.write(file.getBytes());
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        user.setImage(imageService.updateImage(userId, file, true));
         userRepository.save(user);
         return true;
     }
 
     /**
-     *  Отдает автар пользователя в виде массива байтов
+     * Отдает автар пользователя в виде массива байтов
+     *
      * @param id Идентификатор пользователя
      * @return массив байтов
      * @throws IOException
      */
-    public byte[] getUserImage (Integer id) throws IOException {
+    public byte[] getUserImage(Integer id) throws IOException {
         User user = userRepository.findById(id).orElseThrow();
-        return Files.readAllBytes(Path.of("src/main/resources/user_images/"+user.getUserId()+".jpg"));
+        return Files.readAllBytes(Path.of("src/main/resources/user_images/" + user.getUserId() + ".jpg"));
     }
 }
