@@ -8,6 +8,7 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.repository.AdImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
 
@@ -29,11 +30,13 @@ public class AdService {
 
     private final ImageService imageService;
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, UserService userService, ImageService imageService) {
+    private final AdImageRepository adImageRepository;
+    public AdService(AdRepository adRepository, UserRepository userRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.imageService = imageService;
+        this.adImageRepository = adImageRepository;
     }
 
     public Ads getAds() {
@@ -51,10 +54,10 @@ public class AdService {
         if (user == null) {
             throw new UnauthorizedException();
         }
-        Ad ad = new Ad(user, createOrUpdateAd.getDescription(), "image", createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
+        Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
 
-        savedAd.setImage(imageService.updateImage(ad.getPk(),file,false));
+        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateImage(ad.getPk(),file,false)));
 
 
 //        File tempFile = new File(pathToAdImages, savedAd.getPk() + "_ad_image.jpg");
@@ -72,7 +75,7 @@ public class AdService {
     private AdDTO adToDTO(Ad ad) {
         return new AdDTO(
                 ad.getAuthor().getUserId(),
-                ad.getImage(),
+                ad.getImage().getImageAddress(),
                 ad.getPk(),
                 ad.getPrice(),
                 ad.getTitle());
@@ -85,7 +88,7 @@ public class AdService {
                 ad.getAuthor().getLastName(),
                 ad.getDescription(),
                 ad.getAuthor().getEmail(),
-                ad.getImage(),
+                ad.getImage().getImageAddress(),
                 ad.getAuthor().getPhone(),
                 ad.getPrice(),
                 ad.getTitle());

@@ -5,17 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.skypro.homework.model.Ad;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class AdImage {
     @Id
-    @OneToOne(targetEntity = Ad.class, mappedBy = "pK")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pk")
+    private Ad ad;
     private String imageAddress;
 
     public AdImage(String imageAddress){

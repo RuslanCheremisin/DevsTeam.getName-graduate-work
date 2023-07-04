@@ -27,11 +27,13 @@ public class ImageService {
     public ImageService(AdImageRepository adImageRepository, UserImageRepository userImageRepository) {
         this.adImageRepository = adImageRepository;
         this.userImageRepository = userImageRepository;
+
     }
 
     public String updateImage(Integer id, MultipartFile file, boolean isUserImage) {
+        init();
         File tempFile;
-        String imageAddress = "";
+        String imageAddress = null;
         if (isUserImage) {
             tempFile = new File(pathToUserImages, id + "_user_image.jpg");
             imageAddress = pathToUserImages + "/" + id + "_user_image.jpg";
@@ -52,5 +54,14 @@ public class ImageService {
             throw new RuntimeException();
         }
         return imageAddress;
+    }
+
+    private void init(){
+        File adImagesDir = new File(pathToAdImages);
+        File userImagesDir = new File(pathToUserImages);
+        if(!adImagesDir.exists() && !userImagesDir.exists()){
+            adImagesDir.mkdirs();
+            userImagesDir.mkdirs();
+        }
     }
 }

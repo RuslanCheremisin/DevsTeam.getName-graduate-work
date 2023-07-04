@@ -58,7 +58,7 @@ public class CommentService {
         User user = userRepository.findUserByEmail(currentPrincipalName);
         Comment comment = new Comment(adId,
                 user.getUserId(),
-                user.getImage(),
+                user.getImage().getImageAddress(),
                 user.getFirstName(),
                 Instant.now().toEpochMilli(), //дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
                 textComment.getText());

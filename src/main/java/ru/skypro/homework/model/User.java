@@ -1,6 +1,7 @@
 package ru.skypro.homework.model;
 
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.model.images.UserImage;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,7 +25,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String image;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
+    private UserImage image;
     public User(String email, String password, String firstName, String lastName, String phone, Role role) {
         this.email = email;
         this.password = password;
@@ -33,7 +37,7 @@ public class User {
         this.phone = phone;
         this.role = role;
     }
-    public User(Integer userId, String email, String firstName, String lastname, String phone, String image) {
+    public User(Integer userId, String email, String firstName, String lastname, String phone, UserImage image) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -43,7 +47,7 @@ public class User {
     }
     public User() {
     }
-    public User(String email, String firstName, String lastname, String phone, String image) {
+    public User(String email, String firstName, String lastname, String phone, UserImage image) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastname;
@@ -93,7 +97,7 @@ public class User {
         this.phone = phone;
     }
 
-    public String getImage() {
+    public UserImage getImage() {
         return image;
     }
 
@@ -105,7 +109,7 @@ public class User {
         this.role = role;
     }
 
-    public void setImage(String image) {
+    public void setImage(UserImage image) {
         this.image = image;
     }
 }

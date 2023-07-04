@@ -5,9 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.skypro.homework.model.User;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -15,8 +13,12 @@ import javax.persistence.OneToOne;
 @Entity
 public class UserImage {
     @Id
-    @OneToOne(targetEntity = User.class, mappedBy = "userId")
-    private Integer UserId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    private Integer id;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userId")
+    private User user;
     private String imageAddress;
 
     public UserImage(String imageAddress) {

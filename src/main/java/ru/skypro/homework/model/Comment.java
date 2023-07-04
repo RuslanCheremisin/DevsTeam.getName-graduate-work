@@ -1,5 +1,7 @@
 package ru.skypro.homework.model;
 
+import ru.skypro.homework.model.images.UserImage;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -31,7 +33,7 @@ public class Comment {
         this.text = text;
     }
 
-    public Comment(Integer adId, Integer author, String authorImage, Integer commentId,  String authorFirstName,
+    public Comment(Integer adId, Integer author, String authorImage, Integer commentId, String authorFirstName,
                    Long createdAt, String text) {
         this.commentId = commentId;
         this.adId = adId;
