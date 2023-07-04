@@ -9,10 +9,14 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer commentId;
-    Integer adId;
-    Integer author;
-    String authorImage;
-    String authorFirstName;
+    @ManyToOne(targetEntity = Ad.class, fetch = FetchType.EAGER)
+    @JoinColumn(name="ad_id")
+    Ad ad;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name="author_id")
+    User author;
+
     Long createdAt;
     String text;
 
@@ -21,37 +25,12 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Integer commentId,
-                   String authorImage, Integer author, String authorFirstName, Long createdAt, String text) {
-        this.commentId = commentId;
+    public Comment(Ad ad, User author, Long createdAt, String text) {
+        this.ad = ad;
         this.author = author;
-        this.authorImage = authorImage;
-        this.authorFirstName = authorFirstName;
         this.createdAt = createdAt;
         this.text = text;
     }
-
-    public Comment(Integer adId, Integer author, String authorImage, Integer commentId,  String authorFirstName,
-                   Long createdAt, String text) {
-        this.commentId = commentId;
-        this.adId = adId;
-        this.author = author;
-        this.authorImage = authorImage;
-        this.authorFirstName = authorFirstName;
-        this.createdAt = createdAt;
-        this.text = text;
-    }
-
-    public Comment(Integer adId, Integer author, String authorImage, String authorFirstName, Long createdAt, String text) {
-        this.adId = adId;
-        this.author = author;
-        this.authorImage = authorImage;
-        this.authorFirstName = authorFirstName;
-        this.createdAt = createdAt;
-        this.text = text;
-    }
-
-    // Get & Set ---------------------------------------
 
     public Integer getCommentId() {
         return commentId;
@@ -61,36 +40,20 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public Integer getAdId() {
-        return adId;
+    public Ad getAd() {
+        return ad;
     }
 
-    public void setAdId(Integer adId) {
-        this.adId = adId;
+    public void setAd(Ad ad) {
+        this.ad = ad;
     }
 
-    public Integer getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Integer author) {
+    public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public String getAuthorImage() {
-        return authorImage;
-    }
-
-    public void setAuthorImage(String authorImage) {
-        this.authorImage = authorImage;
-    }
-
-    public String getAuthorFirstName() {
-        return authorFirstName;
-    }
-
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
     }
 
     public Long getCreatedAt() {
@@ -107,24 +70,5 @@ public class Comment {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(commentId, comment.commentId)
-                && Objects.equals(adId, comment.adId)
-                && Objects.equals(author, comment.author)
-                && Objects.equals(authorImage, comment.authorImage)
-                && Objects.equals(authorFirstName, comment.authorFirstName)
-                && Objects.equals(createdAt, comment.createdAt)
-                && Objects.equals(text, comment.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(commentId, adId, author, authorImage, authorFirstName, createdAt, text);
     }
 }
