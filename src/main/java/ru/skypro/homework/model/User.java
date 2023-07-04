@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,10 +18,12 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+
+    @OneToMany(mappedBy = "author")
+    private List<Ad> ads =new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    //OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    //List<Ad> ads = new ArrayList<>();
     private String image;
     public User(String email, String password, String firstName, String lastName, String phone, Role role) {
         this.email = email;
@@ -49,9 +53,12 @@ public class User {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Ad> getAds() {
+        return ads;
     }
 
     public String getFirstName() {

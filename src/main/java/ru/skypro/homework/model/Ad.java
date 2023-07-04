@@ -9,14 +9,15 @@ public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
-    private Integer author;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User author;
     private String image;
 
     private String description;
     private Integer price;
     private String title;
 
-    public Ad(Integer author, String image, Integer pk, String description, Integer price, String title) {
+    public Ad(User author, String image, Integer pk, String description, Integer price, String title) {
         this.author = author;
         this.image = image;
         this.pk = pk;
@@ -25,7 +26,7 @@ public class Ad {
         this.title = title;
     }
 
-    public Ad(Integer author, String description, String image, Integer price, String title) {
+    public Ad(User author, String description, String image, Integer price, String title) {
         this.author = author;
         this.image = image;
         this.description = description;
@@ -36,11 +37,11 @@ public class Ad {
     public Ad() {
     }
 
-    public Integer getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Integer author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

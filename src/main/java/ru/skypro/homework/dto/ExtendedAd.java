@@ -6,11 +6,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class AdDTO {
-    Integer author;
-    String image;
+@NoArgsConstructor
+public class ExtendedAd {
     Integer pk;
+    String authorFirstName;
+    String authorLastName;
+    String description;
+    String email;
+    String image;
+    String phone;
     Integer price;
     String title;
-
 }
