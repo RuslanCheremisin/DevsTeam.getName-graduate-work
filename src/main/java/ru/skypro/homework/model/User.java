@@ -19,7 +19,7 @@ public class User {
     private String lastName;
     private String phone;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private List<Ad> ads =new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

@@ -68,8 +68,9 @@ public class CommentService {
 
     /** 5. Удаление комментария. */
     public void deleteCommentById(Integer adId, Integer commentId){
-        if (commentRepository.findCommentByAdIdAndCommentId(adId, commentId) != null) {
-            commentRepository.deleteByAdIdAndCommentId(adId, commentId);
+        Comment comment = commentRepository.findCommentByAdIdAndCommentId(adId, commentId);
+        if (comment != null) {
+            commentRepository.delete(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
