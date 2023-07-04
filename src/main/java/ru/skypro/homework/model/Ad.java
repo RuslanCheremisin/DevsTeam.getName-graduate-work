@@ -12,7 +12,8 @@ public class Ad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer pk;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = User.class,fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     @OneToOne(fetch = FetchType.EAGER)

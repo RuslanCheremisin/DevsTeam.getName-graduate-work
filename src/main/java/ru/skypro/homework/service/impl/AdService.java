@@ -39,12 +39,12 @@ public class AdService {
         this.adImageRepository = adImageRepository;
     }
 
-    public Ads getAds() {
+    public Ads getAds(){
         List<Ad> adsList = adRepository.findAll();
-        return new Ads(adsList.size(), adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
+        return new Ads(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 
-    public ExtendedAd getAd(Integer id) {
+    public ExtendedAd getAd(int id){
         Ad ad = adRepository.findById(id).orElseThrow();
         return adTOExtended(ad);
     }
@@ -102,10 +102,10 @@ public class AdService {
         }
     }
 
-    public Ads getAllUserAdds() {
+    public Ads getAllUserAdds(){
         User user = userService.getAuthUser();
-        List<AdDTO> list = user.getAds().stream().map(this::adToDTO).collect(Collectors.toList());
-        return new Ads(list.size(), list);
+        List<AdDTO> list =adRepository.findAdsByAuthor(user).stream().map(this::adToDTO).collect(Collectors.toList());
+        return new Ads(list);
     }
 
     public FileSystemResource getAdImage(Integer id) throws IOException {
@@ -137,5 +137,10 @@ public class AdService {
             throw new RuntimeException();
         }
         return adToDTO(ad);
+    }
+
+    public Ads searchAds(String req){
+        List<Ad> list = adRepository.findAdsByTitleContaining(req);
+        return new Ads(list.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 }

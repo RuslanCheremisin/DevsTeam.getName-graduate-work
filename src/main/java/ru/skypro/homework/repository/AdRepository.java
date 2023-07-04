@@ -2,9 +2,11 @@ package ru.skypro.homework.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.User;
 
 import java.util.List;
 
 public interface AdRepository extends JpaRepository<Ad, Integer> {
-    List<Ad> findAdsByAuthor(Integer author);
+    List<Ad> findAdsByAuthor(User author);
+    List<Ad> findAdsByTitleContaining(String req);
 }
