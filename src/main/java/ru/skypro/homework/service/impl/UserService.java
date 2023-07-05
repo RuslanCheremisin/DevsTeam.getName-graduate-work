@@ -15,6 +15,7 @@ import ru.skypro.homework.repository.UserRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class UserService {
@@ -133,7 +134,11 @@ public class UserService {
             throw new UnauthorizedException();
         }
         Integer userId = user.getUserId();
-        File tempFile = new File("src/main/resources/user_images/", String.valueOf(userId)+".jpg");
+        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+        if(!Files.exists(path)){
+           new File(path.toString()).mkdir();
+        }
+        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
         try (OutputStream os = new FileOutputStream(tempFile)) {
             os.write(file.getBytes());
         } catch (FileNotFoundException e) {
@@ -154,6 +159,8 @@ public class UserService {
      */
     public byte[] getUserImage (Integer id) throws IOException {
         User user = userRepository.findById(id).orElseThrow();
-        return Files.readAllBytes(Path.of("src/main/resources/user_images/"+user.getUserId()+".jpg"));
+        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+
+        return Files.readAllBytes(Path.of(path.toString(), user.getUserId()+".jpg"));
     }
 }
