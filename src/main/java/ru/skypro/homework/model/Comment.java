@@ -20,8 +20,6 @@ public class Comment {
     Long createdAt;
     String text;
 
-    // Constructors ------------------------------------
-
     public Comment() {
     }
 
