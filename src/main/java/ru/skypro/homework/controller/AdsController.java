@@ -94,17 +94,7 @@ public class AdsController {
     }
 
     /** 17. Обновление картинки объявления */
-    @PatchMapping("{id}/image")
-    public ResponseEntity<?> updateImage(@PathVariable Integer id,
-                                         @RequestParam("image") MultipartFile file) {
-        return ResponseEntity.ok().body(adService.updateAdImage(id, file));
-    }
 
-    /** Отдает массив байтов по ссылке на картинку объявления */
-    @GetMapping(value ="/images/{id}")
-    public ResponseEntity<FileSystemResource> getAdImage(@PathVariable Integer id) throws IOException {
-        return ResponseEntity.ok(adService.getAdImage(id));
-    }
 
 }
 
