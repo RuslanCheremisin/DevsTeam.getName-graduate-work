@@ -32,9 +32,9 @@ public class AdService {
         this.userService = userService;
     }
 
-    public Ads getAds(){
+    public AdsDTO getAds(){
         List<Ad> adsList = adRepository.findAll();
-        return new Ads(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
+        return new AdsDTO(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 
     public ExtendedAd getAd(int id){
@@ -91,10 +91,10 @@ public class AdService {
         }
     }
 
-    public Ads getAllUserAdds(){
+    public AdsDTO getAllUserAdds(){
         User user = userService.getAuthUser();
         List<AdDTO> list =adRepository.findAdsByAuthor(user).stream().map(this::adToDTO).collect(Collectors.toList());
-        return new Ads(list);
+        return new AdsDTO(list);
     }
 
     public byte[] getAdImage (Integer id) throws IOException {
@@ -128,8 +128,8 @@ public class AdService {
         return adToDTO(ad);
     }
 
-    public Ads searchAds(String req){
+    public AdsDTO searchAds(String req){
         List<Ad> list = adRepository.findAdsByTitleContaining(req);
-        return new Ads(list.stream().map(this::adToDTO).collect(Collectors.toList()));
+        return new AdsDTO(list.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 }

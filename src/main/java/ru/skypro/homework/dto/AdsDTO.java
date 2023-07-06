@@ -2,15 +2,14 @@ package ru.skypro.homework.dto;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Data
-public class Ads {
+public class AdsDTO {
     Integer count;
     List<AdDTO> results;
 
-    public Ads(List<AdDTO> results) {
+    public AdsDTO(List<AdDTO> results) {
         this.count = results.size();
         this.results = results;
     }
