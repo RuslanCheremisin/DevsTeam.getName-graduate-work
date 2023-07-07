@@ -10,12 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.repository.UserImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class UserService {
@@ -26,26 +26,21 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ImageService imageService;
-
-    private final UserImageRepository userImageRepository;
 
 
-    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
+
+    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
 
-        this.imageService = imageService;
-        this.userImageRepository = userImageRepository;
     }
 
     /**
      * Получает авторизированного пользователя и возвращает его
-     *
      * @return авторизированный пользователь
      */
-    public User getAuthUser() {
+    public User getAuthUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return userRepository.findUserByEmail(currentPrincipalName);
@@ -53,46 +48,42 @@ public class UserService {
 
     /**
      * Преобразование сущности User  в  DTO
-     *
      * @param user объект пользователь из БД
      * @return объект UserDTO
      */
-    public UserDTO userToUserDTO(User user) {
+    public UserDTO userToUserDTO(User user){
         return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
-                user.getImage().getImageAddress());
+                user.getImage());
     }
 
     /**
      * Создание пользователя при регистрации
-     *
      * @param req минимальные данные для регистрации
      * @return User
      */
-    public User registerReqToUser(RegisterReq req) {
-        return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
-                req.getPhone(), req.getRole());
+    public User registerReqToUser(RegisterReq req){
+    return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
+            req.getPhone(), req.getRole());
     }
 
     /**
      * Сохраняет пользователя после регистрации в БД
-     *
-     * @param req  регистрационные данные
+     * @param req регистрационные данные
      * @param role роль
      */
-    public void saveRegisteredUser(RegisterReq req, Role role) {
+    public void saveRegisteredUser(RegisterReq req, Role role){
         User user = registerReqToUser(req);
         user.setRole(role);
         userRepository.save(user);
     }
-
     /**
      * Обновление пароля пользователя
+     * @param passwordDTO   новый пароль
      *
-     * @param passwordDTO новый пароль
      */
     public boolean updateUserPassword(PasswordDTO passwordDTO) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null) {
+        if (user == null){
             throw new UnauthorizedException();
         }
         String username = user.getEmail();
@@ -106,12 +97,11 @@ public class UserService {
 
     /**
      * Обновление данных пользователя
-     *
      * @param req
      */
     public void updateUser(UserUpdateReq req) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null) {
+        if (user == null){
             throw new UnauthorizedException();
         }
         user.setFirstName(req.getFirstName());
@@ -122,12 +112,11 @@ public class UserService {
 
     /**
      * Получает авторизированного пользователя
-     *
      * @return объект UserDTO
      */
     public UserDTO getUser() throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null) {
+        if (user == null){
             throw new UnauthorizedException();
         }
         return userToUserDTO(user);
@@ -136,39 +125,42 @@ public class UserService {
 
     /**
      * Принимает файл автара и сохраняет его, ссылку на аватар добавляет в БД
-     *
      * @param file новый автар
      * @return
      */
     public boolean updateUserImage(MultipartFile file) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null) {
+        if (user == null){
             throw new UnauthorizedException();
         }
         Integer userId = user.getUserId();
-
-//        File tempFile = new File("src/main/resources/user_images/", String.valueOf(userId)+".jpg");
-//        try (OutputStream os = new FileOutputStream(tempFile)) {
-//            os.write(file.getBytes());
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        user.setImage(userImageRepository.findByImageAddress(imageService.updateImage(userId, file, true)));
+        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+        if(!Files.exists(path)){
+           new File(path.toString()).mkdir();
+        }
+        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
+        try (OutputStream os = new FileOutputStream(tempFile)) {
+            os.write(file.getBytes());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        user.setImage("/users/avatar/"+userId);
         userRepository.save(user);
         return true;
     }
 
     /**
-     * Отдает автар пользователя в виде массива байтов
-     *
+     *  Отдает автар пользователя в виде массива байтов
      * @param id Идентификатор пользователя
      * @return массив байтов
      * @throws IOException
      */
-    public byte[] getUserImage(Integer id) throws IOException {
+    public byte[] getUserImage (Integer id) throws IOException {
         User user = userRepository.findById(id).orElseThrow();
-        return Files.readAllBytes(Path.of("src/main/resources/user_images/" + user.getUserId() + ".jpg"));
+        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+
+        return Files.readAllBytes(Path.of(path.toString(), user.getUserId()+".jpg"));
     }
 }

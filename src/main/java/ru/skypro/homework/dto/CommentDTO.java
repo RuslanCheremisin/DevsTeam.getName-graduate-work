@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class CommentDTO {
-
     Integer author;
     String authorImage;
     String authorFirstName;
