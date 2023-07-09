@@ -25,15 +25,17 @@ public class UserService {
     private final UserDetailsManager detailsManager;
 
     private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
 
 
 
 
-    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
 
+        this.imageService = imageService;
     }
 
     /**
@@ -53,7 +55,7 @@ public class UserService {
      */
     public UserDTO userToUserDTO(User user){
         return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
-                user.getImage());
+                user.getImage().getImageAddress());
     }
 
     /**
@@ -133,21 +135,22 @@ public class UserService {
         if (user == null){
             throw new UnauthorizedException();
         }
-        Integer userId = user.getUserId();
-        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
-        if(!Files.exists(path)){
-           new File(path.toString()).mkdir();
-        }
-        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
-        try (OutputStream os = new FileOutputStream(tempFile)) {
-            os.write(file.getBytes());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        user.setImage("/users/avatar/"+userId);
-        userRepository.save(user);
+        imageService.updateImage(user.getUserId(), file, true);
+//        Integer userId = user.getUserId();
+//        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+//        if(!Files.exists(path)){
+//           new File(path.toString()).mkdir();
+//        }
+//        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
+//        try (OutputStream os = new FileOutputStream(tempFile)) {
+//            os.write(file.getBytes());
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        user.setImage("/users/avatar/"+userId);
+//        userRepository.save(user);
         return true;
     }
 

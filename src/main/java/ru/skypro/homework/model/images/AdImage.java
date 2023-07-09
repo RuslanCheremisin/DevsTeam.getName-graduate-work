@@ -20,7 +20,8 @@ public class AdImage {
     private Ad ad;
     private String imageAddress;
 
-    public AdImage(String imageAddress){
+    public AdImage(Ad ad, String imageAddress){
+        this.ad = ad;
         this.imageAddress = imageAddress;
     }
 }

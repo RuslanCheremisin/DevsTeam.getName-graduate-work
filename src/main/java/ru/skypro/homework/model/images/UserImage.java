@@ -20,9 +20,10 @@ public class UserImage {
     private User user;
     private String imageAddress;
 
-    private String imageLink;
 
-    public UserImage(String imageAddress) {
+
+    public UserImage(User user, String imageAddress) {
+        this.user = user;
         this.imageAddress = imageAddress;
     }
 }
