@@ -2,7 +2,6 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.CommentService;
 
-import java.io.IOException;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -41,7 +39,7 @@ public class AdsController {
     }
     /** 9. Получение информации об объявлении */
     @GetMapping("{id}")
-    public ResponseEntity<?> getAd(@PathVariable Integer id) {
+    public ResponseEntity<ExtendedAd> getAd(@PathVariable Integer id) {
         return ResponseEntity.ok().body(adService.getAd(id));
     }
 

@@ -31,6 +31,7 @@ public class AdService {
     private final ImageService imageService;
 
     private final AdImageRepository adImageRepository;
+
     public AdService(AdRepository adRepository, UserRepository userRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
         this.adRepository = adRepository;
         this.userRepository = userRepository;
@@ -39,12 +40,12 @@ public class AdService {
         this.adImageRepository = adImageRepository;
     }
 
-    public AdsDTO getAds(){
+    public AdsDTO getAds() {
         List<Ad> adsList = adRepository.findAll();
         return new AdsDTO(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 
-    public ExtendedAd getAd(int id){
+    public ExtendedAd getAd(int id) {
         Ad ad = adRepository.findById(id).orElseThrow();
         return adTOExtended(ad);
     }
@@ -57,18 +58,7 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
 
-        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateImage(ad.getPk(),file,false)));
-
-
-//        File tempFile = new File(pathToAdImages, savedAd.getPk() + "_ad_image.jpg");
-//        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-//            fos.write(file.getBytes());
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException("File not found!");
-//        } catch (IOException e) {
-//            throw new RuntimeException();
-//        }
-
+        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateImage(ad.getPk(), file, false)));
         return adToDTO(adRepository.save(savedAd));
     }
 
@@ -94,24 +84,13 @@ public class AdService {
                 ad.getTitle());
     }
 
-    private void init() {
-        try {
-            Files.createDirectories(Path.of(pathToAdImages));
-        } catch (IOException e) {
-            throw new RuntimeException("Не удалось инициализировать директорию для выгрузки файла!");
-        }
-    }
-
-    public AdsDTO getAllUserAdds(){
+      public AdsDTO getAllUserAdds() {
         User user = userService.getAuthUser();
-        List<AdDTO> list =adRepository.findAdsByAuthor(user).stream().map(this::adToDTO).collect(Collectors.toList());
+        List<AdDTO> list = adRepository.findAdsByAuthor(user).stream().map(this::adToDTO).collect(Collectors.toList());
         return new AdsDTO(list);
     }
 
-    public FileSystemResource getAdImage(Integer id) throws IOException {
-        Ad ad = adRepository.findById(id).orElseThrow();
-        return new FileSystemResource(Path.of(pathToAdImages + ad.getPk() + "_ad_image.jpg"));
-    }
+
 
 
     public AdDTO updateAdInfo(Integer id, CreateOrUpdateAd createOrUpdateAd) {
@@ -139,7 +118,7 @@ public class AdService {
         return adToDTO(ad);
     }
 
-    public AdsDTO searchAds(String req){
+    public AdsDTO searchAds(String req) {
         List<Ad> list = adRepository.findAdsByTitleContaining(req);
         return new AdsDTO(list.stream().map(this::adToDTO).collect(Collectors.toList()));
     }

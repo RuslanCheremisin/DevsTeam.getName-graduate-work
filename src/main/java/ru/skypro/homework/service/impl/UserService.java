@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.images.UserImage;
+import ru.skypro.homework.repository.UserImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.*;
@@ -26,16 +28,18 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
+    private final UserImageRepository userImageRepository;
 
 
 
 
-    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService) {
+    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
 
         this.imageService = imageService;
+        this.userImageRepository = userImageRepository;
     }
 
     /**
@@ -149,7 +153,10 @@ public class UserService {
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
-//        user.setImage("/users/avatar/"+userId);
+//
+//        UserImage image = new UserImage(user, "/users/avatar/" + userId);
+//        userImageRepository.save(image);
+//        user.setImage(image);
 //        userRepository.save(user);
         return true;
     }

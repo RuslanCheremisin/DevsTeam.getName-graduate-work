@@ -21,6 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -57,9 +58,9 @@ public class UserController {
     }
 
     /** Отдает массив байтов по ссылке на аватар пользователя */
-    @GetMapping(value ="/avatar/{id}")
-    public byte[] getUserImage(@PathVariable Integer id) throws IOException {
-        return  userService.getUserImage(id);
-    }
+//    @GetMapping(value ="/avatar/{id}")
+//    public byte[] getUserImage(@PathVariable Integer id) throws IOException {
+//        return  userService.getUserImage(id);
+//    }
 
 }
