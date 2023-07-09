@@ -59,7 +59,7 @@ public class ImageService {
             userRepository.save(user);
         } else {
             Ad ad = adRepository.findById(id).orElseThrow();
-            imageAddress = "ads/image/" + id;
+            imageAddress = "/ads/image/" + id;
             AdImage image = new AdImage(ad, imageAddress);
             adImageRepository.save(image);
             ad.setImage(image);

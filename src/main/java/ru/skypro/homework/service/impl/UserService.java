@@ -161,16 +161,5 @@ public class UserService {
         return true;
     }
 
-    /**
-     *  Отдает автар пользователя в виде массива байтов
-     * @param id Идентификатор пользователя
-     * @return массив байтов
-     * @throws IOException
-     */
-    public byte[] getUserImage (Integer id) throws IOException {
-        User user = userRepository.findById(id).orElseThrow();
-        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
 
-        return Files.readAllBytes(Path.of(path.toString(), user.getUserId()+".jpg"));
-    }
 }
