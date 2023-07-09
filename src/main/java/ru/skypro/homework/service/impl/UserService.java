@@ -58,9 +58,13 @@ public class UserService {
      * @return объект UserDTO
      */
     public UserDTO userToUserDTO(User user){
+        if(user.getImage()!=null){
         return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
                 user.getImage().getImageAddress());
-    }
+    }else{
+            return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
+                    null);
+        }}
 
     /**
      * Создание пользователя при регистрации
