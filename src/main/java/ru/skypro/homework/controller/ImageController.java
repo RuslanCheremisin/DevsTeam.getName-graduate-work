@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,14 +28,16 @@ public class ImageController {
         return ResponseEntity.ok().body(adService.updateAdImage(id, file));
     }
 
-    /** Отдает массив байтов по ссылке на картинку объявления */
+    /**
+     * Отдает массив байтов по ссылке на картинку объявления
+     */
     @GetMapping(value ="ads/image/{id}")
-    public byte[] getAdImage(@PathVariable Integer id) throws IOException {
+    public FileSystemResource getAdImage(@PathVariable Integer id) throws IOException {
         return imageService.getAdImage(id);
     }
 
     @GetMapping(value = "users/avatar/{id}")
-    public byte[] getUserImage(@PathVariable Integer id) throws IOException {
+    public FileSystemResource getUserImage(@PathVariable Integer id) throws IOException {
         return imageService.getUserImage(id);
     }
 

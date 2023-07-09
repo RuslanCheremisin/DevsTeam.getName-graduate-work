@@ -17,9 +17,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
 public class ImageService {
@@ -78,16 +76,16 @@ public class ImageService {
         return imageAddress;
     }
 
-    public byte[] getUserImage(Integer id) throws IOException {
+    public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findById(id).orElseThrow();
         UserImage image = user.getImage();
-        return Files.readAllBytes(Path.of(pathToUserImages + image.getId() + "_user_image.jpg"));
+        return new FileSystemResource(Path.of(pathToUserImages + image.getId() + "_user_image.jpg"));
     }
 
-    public byte[] getAdImage(Integer id) throws IOException {
+    public FileSystemResource getAdImage(Integer id) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow();
         AdImage image = ad.getImage();
-        return Files.readAllBytes(Path.of(pathToAdImages + image.getId() + "_ad_image.jpg"));
+        return new FileSystemResource(Path.of(pathToAdImages + image.getId() + "_ad_image.jpg"));
     }
 
     private void init() {
