@@ -1,7 +1,5 @@
 package ru.skypro.homework.model;
 
-import ru.skypro.homework.model.images.UserImage;
-
 import javax.persistence.*;
 
 
