@@ -39,8 +39,8 @@ public class WebSecurityConfig {
                             authorization
                                     .mvcMatchers(AUTH_WHITELIST)
                                     .permitAll()
-                                    .mvcMatchers("/ads/**", "/users/**")
-                                    .authenticated())
+                                    .mvcMatchers("/ads/**", "/users/**", "/*")
+                                    .hasAnyAuthority("USER", "ADMIN"))
             .cors()
             .and()
             .httpBasic(withDefaults());
