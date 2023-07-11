@@ -48,13 +48,15 @@ public class ImageService {
         if (isUserImage) {
             User user = userRepository.findById(id).orElseThrow();
             imageAddress = "/users/avatar/" + id;
-            UserImage image = new UserImage(user, imageAddress);
-            userImageRepository.save(image);
-            user.setImage(image);
+            if (user.getImage() == null) {
+                UserImage image = new UserImage(user, imageAddress);
+                userImageRepository.save(image);
+                user.setImage(image);
+                userRepository.save(user);
+            }
             tempFile = new File(
                     Path.of(pathToUserImages).toAbsolutePath().toFile(),
                     userImageRepository.findUserImageByImageAddress(imageAddress).getId() + "_user_image.jpg");
-            userRepository.save(user);
         } else {
             Ad ad = adRepository.findById(id).orElseThrow();
             imageAddress = "/ads/image/" + id;
