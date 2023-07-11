@@ -19,7 +19,7 @@ public class Ad {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @OneToOne(targetEntity = AdImage.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = AdImage.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "image_id")
     private AdImage image;
 

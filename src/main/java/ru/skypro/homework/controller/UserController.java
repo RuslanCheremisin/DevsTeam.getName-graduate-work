@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
-import ru.skypro.homework.model.User;
 import ru.skypro.homework.service.impl.UserService;
-
-import java.io.IOException;
 
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -57,10 +54,5 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    /** Отдает массив байтов по ссылке на аватар пользователя */
-//    @GetMapping(value ="/avatar/{id}")
-//    public byte[] getUserImage(@PathVariable Integer id) throws IOException {
-//        return  userService.getUserImage(id);
-//    }
 
 }

@@ -46,7 +46,7 @@ public class ImageService {
         File tempFile;
         String imageAddress = null;
         if (isUserImage) {
-            User user = userRepository.findById(id).orElseThrow();
+            User user = userRepository.findUserById(id).orElseThrow();
             imageAddress = "/users/avatar/" + id;
             if (user.getImage() == null) {
                 UserImage image = new UserImage(user, imageAddress);
@@ -79,7 +79,7 @@ public class ImageService {
     }
 
     public FileSystemResource getUserImage(Integer id) throws IOException {
-        User user = userRepository.findById(id).orElseThrow();
+        User user = userRepository.findUserById(id).orElseThrow();
         UserImage image = user.getImage();
         return new FileSystemResource(Path.of(pathToUserImages + image.getId() + "_user_image.jpg"));
     }

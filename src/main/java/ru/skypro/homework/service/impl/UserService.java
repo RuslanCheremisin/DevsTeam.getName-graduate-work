@@ -1,8 +1,11 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
@@ -21,21 +24,19 @@ import java.nio.file.Paths;
 
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
 
-    private final UserDetailsManager detailsManager;
+    private final JpaUserDetailsManager detailsManager;
 
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final UserImageRepository userImageRepository;
 
 
-    public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
+    public UserService(UserRepository userRepository, JpaUserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
-
         this.imageService = imageService;
         this.userImageRepository = userImageRepository;
     }
@@ -48,7 +49,7 @@ public class UserService {
     public User getAuthUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
-        return userRepository.findUserByEmail(currentPrincipalName);
+        return userRepository.findUserByUsername(currentPrincipalName).orElseThrow();
     }
 
     /**
@@ -59,36 +60,14 @@ public class UserService {
      */
     public UserDTO userToUserDTO(User user) {
         if (user.getImage() != null) {
-            return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
                     user.getImage().getImageAddress());
         } else {
-            return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
                     null);
         }
     }
 
-    /**
-     * Создание пользователя при регистрации
-     *
-     * @param req минимальные данные для регистрации
-     * @return User
-     */
-    public User registerReqToUser(RegisterReq req) {
-        return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
-                req.getPhone(), req.getRole());
-    }
-
-    /**
-     * Сохраняет пользователя после регистрации в БД
-     *
-     * @param req  регистрационные данные
-     * @param role роль
-     */
-    public void saveRegisteredUser(RegisterReq req, Role role) {
-        User user = registerReqToUser(req);
-        user.setRole(role);
-        userRepository.save(user);
-    }
 
     /**
      * Обновление пароля пользователя
@@ -100,11 +79,7 @@ public class UserService {
         if (user == null) {
             throw new UnauthorizedException();
         }
-        String username = user.getEmail();
-        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
-        userRepository.save(user);
-        UserDetails userDetails = detailsManager.loadUserByUsername(username);
-        detailsManager.changePassword((userDetails.getPassword()), passwordEncoder.encode(passwordDTO.getNewPassword()));
+        detailsManager.changePassword(user.getPassword(), passwordEncoder.encode(passwordDTO.getNewPassword()));
         return true;
     }
 
@@ -122,7 +97,7 @@ public class UserService {
         user.setFirstName(req.getFirstName());
         user.setLastName(req.getLastName());
         user.setPhone(req.getPhone());
-        userRepository.save(user);
+        detailsManager.updateUser(user);
     }
 
     /**
@@ -150,7 +125,25 @@ public class UserService {
         if (user == null) {
             throw new UnauthorizedException();
         }
-        imageService.updateImage(user.getUserId(), file, true);
+        imageService.updateImage(user.getId(), file, true);
+//        Integer userId = user.getUserId();
+//        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
+//        if(!Files.exists(path)){
+//           new File(path.toString()).mkdir();
+//        }
+//        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
+//        try (OutputStream os = new FileOutputStream(tempFile)) {
+//            os.write(file.getBytes());
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        UserImage image = new UserImage(user, "/users/avatar/" + userId);
+//        userImageRepository.save(image);
+//        user.setImage(image);
+//        userRepository.save(user);
         return true;
     }
 

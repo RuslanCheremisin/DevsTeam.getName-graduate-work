@@ -1,7 +1,6 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -13,8 +12,6 @@ import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,7 +61,7 @@ public class AdService {
 
     private AdDTO adToDTO(Ad ad) {
         return new AdDTO(
-                ad.getAuthor().getUserId(),
+                ad.getAuthor().getId(),
                 ad.getImage().getImageAddress(),
                 ad.getPk(),
                 ad.getPrice(),
@@ -77,7 +74,7 @@ public class AdService {
                 ad.getAuthor().getFirstName(),
                 ad.getAuthor().getLastName(),
                 ad.getDescription(),
-                ad.getAuthor().getEmail(),
+                ad.getAuthor().getUsername(),
                 ad.getImage().getImageAddress(),
                 ad.getAuthor().getPhone(),
                 ad.getPrice(),
