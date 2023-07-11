@@ -11,6 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "user_images")
 public class UserImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +20,6 @@ public class UserImage {
     @JoinColumn(name = "user_id")
     private User user;
     private String imageAddress;
-
-
 
     public UserImage(User user, String imageAddress) {
         this.user = user;

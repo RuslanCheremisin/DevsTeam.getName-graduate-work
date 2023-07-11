@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-images
+      author: Rus
+      changes:
+        - createTable:
+            tableName: user-images
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: image_address
+                  type: varchar
+              - column:
+                  name: user_id
+                  type: integer
+                  constraints:
+                    nullable: false

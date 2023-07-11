@@ -31,8 +31,6 @@ public class UserService {
     private final UserImageRepository userImageRepository;
 
 
-
-
     public UserService(UserRepository userRepository, UserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
         this.userRepository = userRepository;
         this.detailsManager = usersManager;
@@ -44,9 +42,10 @@ public class UserService {
 
     /**
      * Получает авторизированного пользователя и возвращает его
+     *
      * @return авторизированный пользователь
      */
-    public User getAuthUser(){
+    public User getAuthUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return userRepository.findUserByEmail(currentPrincipalName);
@@ -54,46 +53,51 @@ public class UserService {
 
     /**
      * Преобразование сущности User  в  DTO
+     *
      * @param user объект пользователь из БД
      * @return объект UserDTO
      */
-    public UserDTO userToUserDTO(User user){
-        if(user.getImage()!=null){
-        return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
-                user.getImage().getImageAddress());
-    }else{
+    public UserDTO userToUserDTO(User user) {
+        if (user.getImage() != null) {
+            return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
+                    user.getImage().getImageAddress());
+        } else {
             return new UserDTO(user.getUserId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getPhone(),
                     null);
-        }}
+        }
+    }
 
     /**
      * Создание пользователя при регистрации
+     *
      * @param req минимальные данные для регистрации
      * @return User
      */
-    public User registerReqToUser(RegisterReq req){
-    return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
-            req.getPhone(), req.getRole());
+    public User registerReqToUser(RegisterReq req) {
+        return new User(req.getUsername(), passwordEncoder.encode(req.getPassword()), req.getFirstName(), req.getLastName(),
+                req.getPhone(), req.getRole());
     }
 
     /**
      * Сохраняет пользователя после регистрации в БД
-     * @param req регистрационные данные
+     *
+     * @param req  регистрационные данные
      * @param role роль
      */
-    public void saveRegisteredUser(RegisterReq req, Role role){
+    public void saveRegisteredUser(RegisterReq req, Role role) {
         User user = registerReqToUser(req);
         user.setRole(role);
         userRepository.save(user);
     }
+
     /**
      * Обновление пароля пользователя
-     * @param passwordDTO   новый пароль
      *
+     * @param passwordDTO новый пароль
      */
     public boolean updateUserPassword(PasswordDTO passwordDTO) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         String username = user.getEmail();
@@ -107,11 +111,12 @@ public class UserService {
 
     /**
      * Обновление данных пользователя
+     *
      * @param req
      */
     public void updateUser(UserUpdateReq req) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         user.setFirstName(req.getFirstName());
@@ -122,11 +127,12 @@ public class UserService {
 
     /**
      * Получает авторизированного пользователя
+     *
      * @return объект UserDTO
      */
     public UserDTO getUser() throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         return userToUserDTO(user);
@@ -135,33 +141,16 @@ public class UserService {
 
     /**
      * Принимает файл автара и сохраняет его, ссылку на аватар добавляет в БД
+     *
      * @param file новый автар
      * @return
      */
     public boolean updateUserImage(MultipartFile file) throws UnauthorizedException {
         User user = getAuthUser();
-        if (user == null){
+        if (user == null) {
             throw new UnauthorizedException();
         }
         imageService.updateImage(user.getUserId(), file, true);
-//        Integer userId = user.getUserId();
-//        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
-//        if(!Files.exists(path)){
-//           new File(path.toString()).mkdir();
-//        }
-//        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
-//        try (OutputStream os = new FileOutputStream(tempFile)) {
-//            os.write(file.getBytes());
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        UserImage image = new UserImage(user, "/users/avatar/" + userId);
-//        userImageRepository.save(image);
-//        user.setImage(image);
-//        userRepository.save(user);
         return true;
     }
 

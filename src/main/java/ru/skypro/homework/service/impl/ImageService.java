@@ -50,10 +50,10 @@ public class ImageService {
             imageAddress = "/users/avatar/" + id;
             UserImage image = new UserImage(user, imageAddress);
             userImageRepository.save(image);
+            user.setImage(image);
             tempFile = new File(
                     Path.of(pathToUserImages).toAbsolutePath().toFile(),
-                    userImageRepository.findByImageAddress(imageAddress).getId() + "_user_image.jpg");
-            user.setImage(image);
+                    userImageRepository.findUserImageByImageAddress(imageAddress).getId() + "_user_image.jpg");
             userRepository.save(user);
         } else {
             Ad ad = adRepository.findById(id).orElseThrow();

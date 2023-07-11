@@ -3,9 +3,6 @@ package ru.skypro.homework.model;
 import lombok.Data;
 import ru.skypro.homework.model.images.AdImage;
 
-import lombok.Data;
-import ru.skypro.homework.model.images.AdImage;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

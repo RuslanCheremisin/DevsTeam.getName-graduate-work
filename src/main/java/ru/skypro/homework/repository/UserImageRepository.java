@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.model.images.UserImage;
 
 public interface UserImageRepository extends JpaRepository<UserImage, Integer> {
-    UserImage findByImageAddress(String imageAddress);
+    UserImage findUserImageByImageAddress(String imageAddress);
 }

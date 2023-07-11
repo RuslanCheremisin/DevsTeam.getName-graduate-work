@@ -11,6 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "ad_images")
 public class AdImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
