@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Rus
       changes:
         - createTable:
-            tableName: user-images
+            tableName: user_images
             columns:
               - column:
                   name: id

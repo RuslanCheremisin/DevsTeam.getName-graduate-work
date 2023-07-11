@@ -23,10 +23,10 @@ databaseChangeLog:
             referencedColumnNames: user_id
         - addForeignKeyConstraint:
             baseTableName: users
-            baseColumnName: user_image_id
+            baseColumnNames: user_image_id
             referencedTableName: user_images
             constraintName: user_image_id
-            referencedColumnNames: user_image_id
+            referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: comments
             baseColumnNames: ad_id
