@@ -32,17 +32,23 @@ public class CommentService {
         this.userService = userService;
     }
 
-    /** 1. Преобразование сущности Comment  в  DTO */
+    /**
+     * 1. Преобразование сущности Comment  в  DTO
+     */
     public CommentDTO commentToCommentDTO(Comment comment) {
-        return new CommentDTO(comment.getAuthor().getId(), comment.getAuthor().getImage().getImageAddress(), comment.getAuthor().getFirstName(),
-                              comment.getCreatedAt(),
-                              comment.getCommentId(),
-                              comment.getText());
+        return new CommentDTO(
+                comment.getAuthor().getId(),
+                comment.getAuthor().getImage() == null ? null : comment.getAuthor().getImage().getImageAddress(),
+                comment.getAuthor().getFirstName(),
+                comment.getCreatedAt(),
+                comment.getCommentId(),
+                comment.getText());
     }
 
 
-
-    /** 2. Получение комментариев объявления */
+    /**
+     * 2. Получение комментариев объявления
+     */
     public CommentsDTO getCommentsOfAd(Integer adId) {
         Ad ad = adRepository.findById(adId).orElseThrow();
         List<Comment> commentList = commentRepository.findCommentsByAd(ad);
@@ -52,10 +58,12 @@ public class CommentService {
         return new CommentsDTO(commentsDTOList.size(), commentsDTOList);
     }
 
-    /** 3. Добавление комментария к объявлению */
-    public CommentDTO addCommentToAd(Integer adId,CreateOrUpdateComment textComment) {
-       User user = userService.getAuthUser();
-       Ad ad = adRepository.findById(adId).orElseThrow();
+    /**
+     * 3. Добавление комментария к объявлению
+     */
+    public CommentDTO addCommentToAd(Integer adId, CreateOrUpdateComment textComment) {
+        User user = userService.getAuthUser();
+        Ad ad = adRepository.findById(adId).orElseThrow();
         Comment comment = new Comment(ad,
                 user,
                 Instant.now().toEpochMilli(), //дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
@@ -64,21 +72,25 @@ public class CommentService {
         return commentToCommentDTO(comment);
     }
 
-    /** 4. Удаление комментария. */
-    public void deleteCommentById(Integer adId, Integer commentId){
+    /**
+     * 4. Удаление комментария.
+     */
+    public void deleteCommentById(Integer adId, Integer commentId) {
         Comment comment = commentRepository.findCommentByAdPkAndCommentId(adId, commentId);
         if (comment != null) {
             commentRepository.delete(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
-    /** 5. Обновление комментария */
+    /**
+     * 5. Обновление комментария
+     */
     public CommentDTO updateCommentById(Integer adId, Integer commentId, CreateOrUpdateComment newText) {
         Comment comment = commentRepository.findCommentByAdPkAndCommentId(adId, commentId);
         if (comment != null) {
             comment.setText(newText.getText());
             commentRepository.save(comment);
-          return commentToCommentDTO(comment);
+            return commentToCommentDTO(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
 
