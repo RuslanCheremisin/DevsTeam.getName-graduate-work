@@ -36,5 +36,3 @@ databaseChangeLog:
               - column:
                   name: image_id
                   type: integer
-                  constraints:
-                    nullable: false

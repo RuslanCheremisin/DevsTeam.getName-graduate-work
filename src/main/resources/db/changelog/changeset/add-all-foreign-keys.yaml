@@ -20,7 +20,7 @@ databaseChangeLog:
             baseColumnNames: user_id
             referencedTableName: users
             constraintName: user_id
-            referencedColumnNames: user_id
+            referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: users
             baseColumnNames: user_image_id
@@ -38,7 +38,7 @@ databaseChangeLog:
             baseColumnNames: author_id
             referencedTableName: users
             constraintName: user_id
-            referencedColumnNames: user_id
+            referencedColumnNames: id
 
 
 

@@ -7,14 +7,19 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: user_id
+                  name: id
                   type: integer
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: email
+                  name: username
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
                   type: varchar
                   constraints:
                     nullable: false
@@ -29,20 +34,27 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: password
-                  type: varchar
-                  constraints:
-                    nullable: false
-              - column:
                   name: phone
                   type: varchar
                   constraints:
                     nullable: false
+#              - column:
+#                  name: role
+#                  type: varchar
+#                  constraints:
+#                    nullable: false
               - column:
-                  name: role
-                  type: varchar
-                  constraints:
-                    nullable: false
+                  name: account_non_expired
+                  type: boolean
+              - column:
+                  name: account_non_locked
+                  type: boolean
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+              - column:
+                  name: enabled
+                  type: boolean
               - column:
                   name: user_image_id
                   type: integer
