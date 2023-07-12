@@ -125,25 +125,7 @@ public class UserService {
         if (user == null) {
             throw new UnauthorizedException();
         }
-        imageService.updateImage(user.getId(), file, true);
-//        Integer userId = user.getUserId();
-//        Path path = Paths.get(Path.of("./").toAbsolutePath().getParent().getParent().getParent().toString()+"/user_images/");
-//        if(!Files.exists(path)){
-//           new File(path.toString()).mkdir();
-//        }
-//        File tempFile = new File(path.toString(), String.valueOf(userId)+".jpg");
-//        try (OutputStream os = new FileOutputStream(tempFile)) {
-//            os.write(file.getBytes());
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        UserImage image = new UserImage(user, "/users/avatar/" + userId);
-//        userImageRepository.save(image);
-//        user.setImage(image);
-//        userRepository.save(user);
+        imageService.updateUserImage(user.getUsername(), file);
         return true;
     }
 

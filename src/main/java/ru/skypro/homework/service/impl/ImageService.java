@@ -41,47 +41,53 @@ public class ImageService {
         this.adRepository = adRepository;
     }
 
-    public String updateImage(Integer id, MultipartFile file, boolean isUserImage) {
+    public String updateUserImage(String username, MultipartFile file) {
         init();
-        File tempFile;
-        String imageAddress = null;
-        if (isUserImage) {
-            User user = userRepository.findUserById(id).orElseThrow();
-            imageAddress = "/users/avatar/" + id;
-            if (user.getImage() == null) {
-                UserImage image = new UserImage(user, imageAddress);
-                userImageRepository.save(image);
-                user.setImage(image);
-                userRepository.save(user);
-            }
-            tempFile = new File(
-                    Path.of(pathToUserImages).toAbsolutePath().toFile(),
-                    userImageRepository.findUserImageByImageAddress(imageAddress).getId() + "_user_image.jpg");
-        } else {
-            Ad ad = adRepository.findById(id).orElseThrow();
-            imageAddress = "/ads/image/" + id;
-            AdImage image = new AdImage(ad, imageAddress);
-            adImageRepository.save(image);
-            ad.setImage(image);
-            tempFile = new File(
-                    Path.of(pathToAdImages).toAbsolutePath().toFile(),
-                    adImageRepository.findAdImageByImageAddress(imageAddress).getId() + "_ad_image.jpg");
-            adRepository.save(ad);
+        User user = userRepository.findUserByUsername(username).orElseThrow();
+        String imageAddress = "/users/avatar/" + user.getId();
+        if (user.getImage() == null) {
+            UserImage image = new UserImage(user, imageAddress);
+            userImageRepository.save(image);
+            user.setImage(image);
+            userRepository.save(user);
         }
+        File tempFile = new File(
+                Path.of(pathToUserImages).toAbsolutePath().toFile(),
+                username + "_user_image.jpg");
+        writeFile(tempFile, file);
+        return imageAddress;
+    }
+
+    public String updateAdImage(Integer id, MultipartFile file) {
+        Ad ad = adRepository.findById(id).orElseThrow();
+        String imageAddress = "/ads/image/" + id;
+        AdImage image = new AdImage(ad, imageAddress);
+        adImageRepository.save(image);
+        ad.setImage(image);
+        File tempFile = new File(
+                Path.of(pathToAdImages).toAbsolutePath().toFile(),
+                adImageRepository.findAdImageByImageAddress(imageAddress).getId() + "_ad_image.jpg");
+        adRepository.save(ad);
+        writeFile(tempFile, file);
+        return imageAddress;
+    }
+
+    private void writeFile(File tempFile, MultipartFile file) {
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(file.getBytes());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found!");
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             throw new RuntimeException();
         }
-        return imageAddress;
     }
+
 
     public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findUserById(id).orElseThrow();
-        UserImage image = user.getImage();
-        return new FileSystemResource(Path.of(pathToUserImages + image.getId() + "_user_image.jpg"));
+//        UserImage image = user.getImage();
+        return new FileSystemResource(Path.of(pathToUserImages + user.getUsername() + "_user_image.jpg"));
     }
 
     public FileSystemResource getAdImage(Integer id) throws IOException {

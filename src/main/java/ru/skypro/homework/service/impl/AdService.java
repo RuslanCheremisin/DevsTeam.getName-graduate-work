@@ -55,7 +55,7 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
 
-        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateImage(ad.getPk(), file, false)));
+        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateAdImage(savedAd.getPk(), file)));
         return adToDTO(adRepository.save(savedAd));
     }
 
