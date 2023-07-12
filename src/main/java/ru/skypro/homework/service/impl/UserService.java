@@ -59,13 +59,8 @@ public class UserService {
      * @return объект UserDTO
      */
     public UserDTO userToUserDTO(User user) {
-        if (user.getImage() != null) {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
-                    user.getImage().getImageAddress());
-        } else {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
-                    null);
-        }
+        return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
+                user.getImage() == null ? null : user.getImage().getImageAddress());
     }
 
 

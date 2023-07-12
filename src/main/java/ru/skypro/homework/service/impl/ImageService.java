@@ -86,7 +86,6 @@ public class ImageService {
 
     public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findUserById(id).orElseThrow();
-//        UserImage image = user.getImage();
         return new FileSystemResource(Path.of(pathToUserImages + user.getUsername() + "_user_image.jpg"));
     }
 
