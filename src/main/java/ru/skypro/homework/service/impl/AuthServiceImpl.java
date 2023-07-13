@@ -59,9 +59,9 @@ public class AuthServiceImpl implements AuthService {
     newUser.setCredentialsNonExpired(true);
 
     AuthGrantedAuthority grantedAuthority = new AuthGrantedAuthority();
-    grantedAuthority.setAuthority(role.name());
+    grantedAuthority.setAuthority("ROLE_"+role.name());
     grantedAuthority.setUser(newUser);
-    userRepository.save(newUser);
+    manager.createUser(newUser);
     authGrantedAuthorityRepository.save(grantedAuthority);
     newUser.setAuthorities(Collections.singleton(grantedAuthority));
     return true;

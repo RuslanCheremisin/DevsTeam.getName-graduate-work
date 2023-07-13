@@ -12,6 +12,7 @@ public class UserDTO {
     String email;
     String firstName;
     String lastName;
+    Role role;
     String phone;
     String image;
 }

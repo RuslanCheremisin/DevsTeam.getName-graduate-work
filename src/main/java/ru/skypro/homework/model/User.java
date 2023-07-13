@@ -7,6 +7,7 @@ import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.images.UserImage;
@@ -92,8 +93,6 @@ private Integer id;
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = (Set<AuthGrantedAuthority>) authorities;
     }
-    //setters
-
 
 
 

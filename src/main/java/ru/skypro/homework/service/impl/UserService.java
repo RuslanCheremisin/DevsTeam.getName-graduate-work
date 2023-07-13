@@ -25,17 +25,16 @@ import java.nio.file.Paths;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-
-    private final JpaUserDetailsManager detailsManager;
+    @Autowired
+    private JpaUserDetailsManager detailsManager;
 
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
     private final UserImageRepository userImageRepository;
 
 
-    public UserService(UserRepository userRepository, JpaUserDetailsManager usersManager, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
         this.userRepository = userRepository;
-        this.detailsManager = usersManager;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
         this.userImageRepository = userImageRepository;
@@ -60,10 +59,10 @@ public class UserService {
      */
     public UserDTO userToUserDTO(User user) {
         if (user.getImage() != null) {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_ADMIN"))? Role.ADMIN: Role.USER, user.getPhone(),
                     user.getImage().getImageAddress());
         } else {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(),user.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_ADMIN"))? Role.ADMIN: Role.USER, user.getPhone(),
                     null);
         }
     }
