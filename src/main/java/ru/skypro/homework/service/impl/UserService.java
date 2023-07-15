@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -13,20 +14,20 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.UserPrincipal;
 import ru.skypro.homework.model.images.UserImage;
 import ru.skypro.homework.repository.UserImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    @Autowired
-    private JpaUserDetailsManager detailsManager;
 
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
@@ -59,10 +60,10 @@ public class UserService {
      */
     public UserDTO userToUserDTO(User user) {
         if (user.getImage() != null) {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_ADMIN"))? Role.ADMIN: Role.USER, user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
                     user.getImage().getImageAddress());
         } else {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(),user.getAuthorities().stream().anyMatch(a->a.getAuthority().equals("ROLE_ADMIN"))? Role.ADMIN: Role.USER, user.getPhone(),
+            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
                     null);
         }
     }
@@ -73,12 +74,11 @@ public class UserService {
      *
      * @param passwordDTO новый пароль
      */
-    public boolean updateUserPassword(PasswordDTO passwordDTO) throws UnauthorizedException {
-        User user = getAuthUser();
-        if (user == null) {
-            throw new UnauthorizedException();
-        }
-        detailsManager.changePassword(user.getPassword(), passwordEncoder.encode(passwordDTO.getNewPassword()));
+    @Transactional
+    public boolean updateUserPassword(PasswordDTO passwordDTO) {
+            User user = getAuthUser();
+            user.setPassword(passwordDTO.getNewPassword());
+            userRepository.save(user);
         return true;
     }
 
@@ -96,7 +96,7 @@ public class UserService {
         user.setFirstName(req.getFirstName());
         user.setLastName(req.getLastName());
         user.setPhone(req.getPhone());
-        detailsManager.updateUser(user);
+        userRepository.save(user);
     }
 
     /**
@@ -129,4 +129,14 @@ public class UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUserByUsername(username).orElseThrow();
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(user.getUsername(), user.getPassword(), user.getId(), user.getRole());
+        return new UserPrincipal(userDetailsDTO);
+    }
+
+    public boolean userExists(String userName) {
+        return userRepository.findUserByUsername(userName).isPresent();
+    }
 }

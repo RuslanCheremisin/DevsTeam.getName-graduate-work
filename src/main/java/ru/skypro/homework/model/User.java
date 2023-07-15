@@ -22,11 +22,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
 
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String username;
     private String password;
 
@@ -35,25 +35,15 @@ private Integer id;
     private String lastName;
 
     private String phone;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<AuthGrantedAuthority> authorities;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Ad> ads =new ArrayList<>();
+    private List<Ad> ads = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
-    private List<Comment> comments =new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
 
     @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER)
@@ -61,54 +51,13 @@ private Integer id;
     private UserImage image;
 
 
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.accountNonExpired;
+    public Role getRole() {
+        return role;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+    public void setRole(Role role) {
+        this.role = role;
     }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.credentialsNonExpired;
-    }
-
-
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = (Set<AuthGrantedAuthority>) authorities;
-    }
-
-
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-
-
-    public User(String username, String password, Set<AuthGrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
-
 
     public User(Integer userId, String username, String firstName, String lastname, String phone, UserImage image) {
         this.id = userId;
@@ -119,13 +68,13 @@ private Integer id;
         this.image = image;
     }
 
-    public User(String username, String password, String firstName, String lastName, String phone, Set<AuthGrantedAuthority> authorities) {
+    public User(String username, String password, String firstName, String lastName, String phone, Role role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.authorities = authorities;
+        this.role = role;
     }
 
     public User() {
@@ -139,7 +88,6 @@ private Integer id;
         this.phone = phone;
         this.image = image;
     }
-
 
 
     public User(String username, String password, String firstName, String lastName, String phone
@@ -160,7 +108,6 @@ private Integer id;
         this.id = id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -169,7 +116,6 @@ private Integer id;
         this.username = username;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -200,11 +146,6 @@ private Integer id;
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 
     public List<Ad> getAds() {
