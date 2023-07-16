@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
@@ -21,22 +22,22 @@ public class AdService {
     private String pathToAdImages;
 
     private final AdRepository adRepository;
-
-    private final UserRepository userRepository;
     private final UserService userService;
 
     private final ImageService imageService;
 
     private final AdImageRepository adImageRepository;
 
-    public AdService(AdRepository adRepository, UserRepository userRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
+    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
         this.adRepository = adRepository;
-        this.userRepository = userRepository;
         this.userService = userService;
         this.imageService = imageService;
         this.adImageRepository = adImageRepository;
     }
 
+    public Ad getAdById(Integer id){
+        return adRepository.findById(id).orElseThrow();
+    }
     public AdsDTO getAds() {
         List<Ad> adsList = adRepository.findAll();
         return new AdsDTO(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
@@ -89,21 +90,20 @@ public class AdService {
 
 
 
-
-    public AdDTO updateAdInfo(Integer id, CreateOrUpdateAd createOrUpdateAd) {
-        Ad ad = adRepository.findById(id).orElseThrow();
+@PreAuthorize("#ad.author.username.equals(authentication.name) or hasRole('ADMIN')")
+    public AdDTO updateAdInfo(Ad ad, CreateOrUpdateAd createOrUpdateAd) {
         ad.setDescription(createOrUpdateAd.getDescription());
         ad.setTitle(createOrUpdateAd.getTitle());
         ad.setPrice(createOrUpdateAd.getPrice());
         return adToDTO(adRepository.save(ad));
     }
-
-    public void removeAd(Integer id) {
-        adRepository.deleteById(id);
+    @PreAuthorize("#ad.author.username.equals(authentication.name) or hasRole('ADMIN')")
+    public void removeAd(Ad ad) {
+        adRepository.delete(ad);
     }
 
-    public AdDTO updateAdImage(Integer id, MultipartFile file) {
-        Ad ad = adRepository.findById(id).orElseThrow();
+    @PreAuthorize("#ad.author.username.equals(authentication.name) or hasRole('ADMIN')")
+    public AdDTO updateAdImage(Ad ad, MultipartFile file) {
         File tempFile = new File(pathToAdImages, ad.getPk() + "_ad_image.jpg");
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(file.getBytes());

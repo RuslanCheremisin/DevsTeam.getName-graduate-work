@@ -46,7 +46,7 @@ public class AdsController {
     /** 10. Удаление объявления */
     @DeleteMapping("{id}")
     public ResponseEntity<?> removeAd(@PathVariable Integer id) {
-        adService.removeAd(id);
+        adService.removeAd(adService.getAdById(id));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -66,14 +66,14 @@ public class AdsController {
     @PatchMapping("{id}")
     public ResponseEntity<?> updateAds(@PathVariable Integer id,
                                        @RequestBody CreateOrUpdateAd newAdReg) {
-        return ResponseEntity.ok().body(adService.updateAdInfo(id, newAdReg));
+        return ResponseEntity.ok().body(adService.updateAdInfo(adService.getAdById(id), newAdReg));
     }
 
     /** 14. Удаление комментария. */
     @DeleteMapping("{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComments(@PathVariable Integer adId,
                                             @PathVariable Integer commentId){
-        commentService.deleteCommentById(adId, commentId);
+        commentService.deleteCommentById(commentService.getCommentByAdIdAndCommentID(adId, commentId));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -82,7 +82,8 @@ public class AdsController {
     public ResponseEntity<?> updateComments(@PathVariable Integer adId,
                                             @PathVariable Integer commentId,
                                             @RequestBody CreateOrUpdateComment newText) {
-        return ResponseEntity.ok().body(commentService.updateCommentById(adId, commentId, newText));
+        return ResponseEntity.ok().body(commentService.
+                updateCommentById(commentService.getCommentByAdIdAndCommentID(adId, commentId), newText));
     }
 
     /** 16. Получение объявлений авторизованного пользователя */
