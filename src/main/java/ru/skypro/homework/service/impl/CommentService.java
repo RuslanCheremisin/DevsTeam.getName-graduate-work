@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
@@ -19,15 +20,12 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
-
     private final AdRepository adRepository;
 
     private final UserService userService;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, AdRepository adRepository, UserService userService) {
+    public CommentService(CommentRepository commentRepository, AdRepository adRepository, UserService userService) {
         this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
         this.adRepository = adRepository;
         this.userService = userService;
     }
@@ -61,6 +59,7 @@ public class CommentService {
     /**
      * 3. Добавление комментария к объявлению
      */
+
     public CommentDTO addCommentToAd(Integer adId, CreateOrUpdateComment textComment) {
         User user = userService.getAuthUser();
         Ad ad = adRepository.findById(adId).orElseThrow();
@@ -75,8 +74,8 @@ public class CommentService {
     /**
      * 4. Удаление комментария.
      */
-    public void deleteCommentById(Integer adId, Integer commentId) {
-        Comment comment = commentRepository.findCommentByAdPkAndCommentId(adId, commentId);
+    @PreAuthorize("#comment.author.username.equals(authentication.name) or hasRole('ADMIN')")
+    public void deleteCommentById(Comment comment) {
         if (comment != null) {
             commentRepository.delete(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
@@ -85,13 +84,19 @@ public class CommentService {
     /**
      * 5. Обновление комментария
      */
-    public CommentDTO updateCommentById(Integer adId, Integer commentId, CreateOrUpdateComment newText) {
-        Comment comment = commentRepository.findCommentByAdPkAndCommentId(adId, commentId);
+    @PreAuthorize("#comment.author.username.equals(authentication.name) or hasRole('ADMIN')")
+    public CommentDTO updateCommentById(Comment comment, CreateOrUpdateComment newText) {
         if (comment != null) {
             comment.setText(newText.getText());
             commentRepository.save(comment);
             return commentToCommentDTO(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
+    }
+    /**
+     * 6. Получение комментария по ID объявления и ID комментария
+     */
+    public Comment getCommentByAdIdAndCommentID(Integer adId, Integer commentId){
+        return commentRepository.findCommentByAdPkAndCommentId(adId, commentId);
     }
 
 
