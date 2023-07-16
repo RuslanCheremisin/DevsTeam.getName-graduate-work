@@ -1,24 +1,9 @@
 package ru.skypro.homework.model;
-
-import lombok.extern.apachecommons.CommonsLog;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.GeneratorType;
-import org.hibernate.annotations.NaturalId;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.images.UserImage;
-
-import javax.annotation.processing.Generated;
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")

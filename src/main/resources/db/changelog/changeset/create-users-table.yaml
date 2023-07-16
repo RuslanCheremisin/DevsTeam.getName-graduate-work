@@ -38,23 +38,11 @@ databaseChangeLog:
                   type: varchar
                   constraints:
                     nullable: false
-#              - column:
-#                  name: role
-#                  type: varchar
-#                  constraints:
-#                    nullable: false
               - column:
-                  name: account_non_expired
-                  type: boolean
-              - column:
-                  name: account_non_locked
-                  type: boolean
-              - column:
-                  name: credentials_non_expired
-                  type: boolean
-              - column:
-                  name: enabled
-                  type: boolean
+                  name: role
+                  type: varchar
+                  constraints:
+                    nullable: false
               - column:
                   name: user_image_id
                   type: integer
