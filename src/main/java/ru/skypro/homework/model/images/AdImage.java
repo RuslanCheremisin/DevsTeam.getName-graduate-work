@@ -16,7 +16,7 @@ public class AdImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ad_id")
     private Ad ad;
     private String imageAddress;

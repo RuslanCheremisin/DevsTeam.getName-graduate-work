@@ -31,7 +31,7 @@ public class User {
     private List<Comment> comments = new ArrayList<>();
 
 
-    @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_image_id")
     private UserImage image;
 

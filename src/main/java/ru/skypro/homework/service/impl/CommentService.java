@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
@@ -15,6 +16,8 @@ import ru.skypro.homework.repository.UserRepository;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ru.skypro.homework.utils.AuthorizationUtils.isUserCommentAuthorOrAdmin;
 
 @Service
 public class CommentService {
@@ -74,9 +77,11 @@ public class CommentService {
     /**
      * 4. Удаление комментария.
      */
-    @PreAuthorize("#comment.author.username.equals(authentication.name) or hasRole('ADMIN')")
-    public void deleteCommentById(Comment comment) {
-        if (comment != null) {
+
+    public void deleteCommentById(Integer adId, Integer commentId) {
+        User user = userService.getAuthUser();
+        Comment comment = getCommentByAdIdAndCommentID(adId, commentId);
+        if(isUserCommentAuthorOrAdmin(comment, user)){
             commentRepository.delete(comment);
         } else throw new RuntimeException("Такой комментарий не найден");
     }
@@ -84,9 +89,11 @@ public class CommentService {
     /**
      * 5. Обновление комментария
      */
-    @PreAuthorize("#comment.author.username.equals(authentication.name) or hasRole('ADMIN')")
-    public CommentDTO updateCommentById(Comment comment, CreateOrUpdateComment newText) {
-        if (comment != null) {
+
+    public CommentDTO updateCommentById(Integer adId, Integer commentId, CreateOrUpdateComment newText) {
+        User user = userService.getAuthUser();
+        Comment comment = getCommentByAdIdAndCommentID(adId, commentId);
+        if(isUserCommentAuthorOrAdmin(comment, user)){
             comment.setText(newText.getText());
             commentRepository.save(comment);
             return commentToCommentDTO(comment);

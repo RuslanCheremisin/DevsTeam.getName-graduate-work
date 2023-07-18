@@ -20,4 +20,3 @@ databaseChangeLog:
                   name: ad_id
                   type: integer
                   constraints:
-                    nullable: false
