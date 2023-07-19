@@ -52,7 +52,7 @@ public class ImageService {
             userRepository.save(user);
         }
         File tempFile = new File(
-                String.valueOf(Path.of(pathToUserImages).toAbsolutePath()),
+                Path.of(pathToUserImages).toString(),
                 username + "_user_image.jpg");
         writeFile(tempFile, file);
         return imageAddress;
@@ -65,7 +65,7 @@ public class ImageService {
         adImageRepository.save(image);
         ad.setImage(image);
         File tempFile = new File(
-                String.valueOf(Path.of(pathToAdImages).toAbsolutePath()),
+                Path.of(pathToAdImages).toString(),
                 adImageRepository.findAdImageByImageAddress(imageAddress).getId() + "_ad_image.jpg");
         adRepository.save(ad);
         writeFile(tempFile, file);
