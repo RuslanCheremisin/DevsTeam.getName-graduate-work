@@ -1,61 +1,112 @@
 package ru.skypro.homework.model;
-
+import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.model.images.UserImage;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
 public class User {
 
-    @Column(name = "email")
-    private String email;
-    @Column(name = "firstName")
-    private String firstName;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "lastName")
-    private String lastname;
-    @Column(name = "phone")
+    private Integer id;
+    private String username;
+    private String password;
+
+    private String firstName;
+
+    private String lastName;
+
     private String phone;
-    @Column(name = "regDate")
-    private String regDate;
-    @Column(name = "city")
-    private String city;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-    @Column(name = "image")
-    private String image;
 
-    public User(String email, String firstName, Long id, String lastname, String phone, String regDate, String city, String image) {
-        this.email = email;
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Ad> ads = new ArrayList<>();
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
+
+
+    @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_image_id")
+    private UserImage image;
+
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public User(Integer userId, String username, String firstName, String lastname, String phone, UserImage image) {
+        this.id = userId;
+        this.username = username;
         this.firstName = firstName;
-        this.id = id;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.phone = phone;
-        this.regDate = regDate;
-        this.city = city;
         this.image = image;
+    }
+
+    public User(String username, String password, String firstName, String lastName, String phone, Role role) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.role = role;
     }
 
     public User() {
     }
 
-    public User(String email, String firstName, String lastname, String phone, String regDate, String city, String image) {
-        this.email = email;
+
+    public User(String username, String firstName, String lastname, String phone, UserImage image) {
+        this.username = username;
         this.firstName = firstName;
-        this.lastname = lastname;
+        this.lastName = lastname;
         this.phone = phone;
-        this.regDate = regDate;
-        this.city = city;
         this.image = image;
     }
 
-    public String getEmail() {
-        return email;
+
+    public User(String username, String password, String firstName, String lastName, String phone
+    ) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {
@@ -66,20 +117,12 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Long getId() {
-        return id;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getPhone() {
@@ -90,27 +133,28 @@ public class User {
         this.phone = phone;
     }
 
-    public String getRegDate() {
-        return regDate;
+    public List<Ad> getAds() {
+        return ads;
     }
 
-    public void setRegDate(String regDate) {
-        this.regDate = regDate;
+    public void setAds(List<Ad> ads) {
+        this.ads = ads;
     }
 
-    public String getCity() {
-        return city;
+    public List<Comment> getComments() {
+        return comments;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
-    public String getImage() {
+
+    public UserImage getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(UserImage image) {
         this.image = image;
     }
 }

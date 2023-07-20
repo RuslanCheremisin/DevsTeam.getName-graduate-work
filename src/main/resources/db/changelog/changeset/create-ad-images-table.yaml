@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-ad-images
+      author: Rus
+      changes:
+        - createTable:
+            tableName: ad_images
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: image_address
+                  type: varchar
+              - column:
+                  name: ad_id
+                  type: integer

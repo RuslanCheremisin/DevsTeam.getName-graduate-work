@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-all-foreign-keys
+      author: Rus
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ads
+            baseColumnNames: image_id
+            referencedTableName: ad_images
+            constraintName: ad_image_id
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: ad_images
+            baseColumnNames: ad_id
+            referencedTableName: ads
+            constraintName: ad_id
+            referencedColumnNames: pk
+        - addForeignKeyConstraint:
+            baseTableName: user_images
+            baseColumnNames: user_id
+            referencedTableName: users
+            constraintName: user_id
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: user_image_id
+            referencedTableName: user_images
+            constraintName: user_image_id
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: comments
+            baseColumnNames: ad_id
+            referencedTableName: ads
+            constraintName: ad_id
+            referencedColumnNames: pk
+        - addForeignKeyConstraint:
+            baseTableName: comments
+            baseColumnNames: author_id
+            referencedTableName: users
+            constraintName: user_id
+            referencedColumnNames: id
+
+
+
