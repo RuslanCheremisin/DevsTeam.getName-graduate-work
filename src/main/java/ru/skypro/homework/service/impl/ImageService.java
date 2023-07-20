@@ -83,12 +83,13 @@ public class ImageService {
         }
     }
 
-
+/** Получение аватара пользователя */
     public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findUserById(id).orElseThrow();
         return new FileSystemResource(Path.of(pathToUserImages + user.getUsername() + "_user_image.jpg"));
     }
 
+    /** Получение картинки объявления */
     public FileSystemResource getAdImage(Integer id) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow();
         AdImage image = ad.getImage();

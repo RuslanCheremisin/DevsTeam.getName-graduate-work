@@ -16,6 +16,7 @@ public class SearchController {
 
     private final AdService adService;
 
+    /** Поиск объявлений */
     @GetMapping
     public ResponseEntity<?> searchAds(@PathVariable String req) throws UnauthorizedException {
         return ResponseEntity.ok().body(adService.searchAds(req));

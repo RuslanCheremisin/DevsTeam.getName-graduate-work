@@ -10,10 +10,11 @@ import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.service.impl.UserService;
 
 
-@CrossOrigin(value = "http://localhost:3000")
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(value = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;

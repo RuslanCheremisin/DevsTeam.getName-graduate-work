@@ -21,7 +21,7 @@ public class ImageController {
         this.adService = adService;
         this.imageService = imageService;
     }
-
+/** Обновление картинки в объявлении */
     @PatchMapping("ads/{id}/image")
     public ResponseEntity<?> updateImage(@PathVariable Integer id,
                                          @RequestParam("image") MultipartFile file) {
@@ -29,6 +29,7 @@ public class ImageController {
     }
 
     /**
+     * Получение картинки объявления
      * Отдает массив байтов по ссылке на картинку объявления
      */
     @GetMapping(value ="ads/image/{id}")
@@ -36,6 +37,10 @@ public class ImageController {
         return imageService.getAdImage(id);
     }
 
+    /**
+     * Получение аватара пользователя
+     * Отдает массив байтов по ссылке на аватар пользователя
+     */
     @GetMapping(value = "users/avatar/{id}")
     public FileSystemResource getUserImage(@PathVariable Integer id) throws IOException {
         return imageService.getUserImage(id);

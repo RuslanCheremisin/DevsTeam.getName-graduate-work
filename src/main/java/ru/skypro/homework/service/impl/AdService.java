@@ -7,9 +7,11 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
+import ru.skypro.homework.model.images.AdImage;
 import ru.skypro.homework.repository.AdImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 
+import java.awt.*;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,20 +36,24 @@ public class AdService {
         this.imageService = imageService;
         this.adImageRepository = adImageRepository;
     }
-
+/** Получение объявления по id */
     public Ad getAdById(Integer id){
         return adRepository.findById(id).orElseThrow();
     }
+
+    /** Получение всеъ объявлений */
     public AdsDTO getAds() {
         List<Ad> adsList = adRepository.findAll();
         return new AdsDTO(adsList.stream().map(this::adToDTO).collect(Collectors.toList()));
     }
 
+    /** Получение объявления по id */
     public ExtendedAd getAd(int id) {
         Ad ad = adRepository.findById(id).orElseThrow();
         return adTOExtended(ad);
     }
 
+    /** Добавление объявления */
     public AdDTO addAd(CreateOrUpdateAd createOrUpdateAd, MultipartFile file) throws UnauthorizedException {
         User user = userService.getAuthUser();
         if (user == null) {
@@ -60,6 +66,7 @@ public class AdService {
         return adToDTO(adRepository.save(savedAd));
     }
 
+    /** Маппинг сокращенной версии объявления в ДТО */
     private AdDTO adToDTO(Ad ad) {
         return new AdDTO(
                 ad.getAuthor().getId(),
@@ -69,6 +76,7 @@ public class AdService {
                 ad.getTitle());
     }
 
+    /** Маппинг полной версии объявления в ДТО */
     private ExtendedAd adTOExtended(Ad ad) {
         return new ExtendedAd(
                 ad.getPk(),
@@ -82,13 +90,14 @@ public class AdService {
                 ad.getTitle());
     }
 
+    /** Получение всеъ объявлений пользователя */
       public AdsDTO getAllUserAdds() {
         User user = userService.getAuthUser();
         List<AdDTO> list = adRepository.findAdsByAuthor(user).stream().map(this::adToDTO).collect(Collectors.toList());
         return new AdsDTO(list);
     }
 
-
+/** Редактирование объявления */
     public AdDTO updateAdInfo(Integer id, CreateOrUpdateAd createOrUpdateAd) {
         User user = userService.getAuthUser();
         Ad ad = getAdById(id);
@@ -99,6 +108,8 @@ public class AdService {
         return adToDTO(adRepository.save(ad));
 
     }
+
+    /** Удаление объявления */
     public void removeAd(Integer id) {
         User user = userService.getAuthUser();
         Ad ad = getAdById(id);
@@ -106,6 +117,7 @@ public class AdService {
         adRepository.delete(ad);}
     }
 
+    /** Обновление картинки объявления */
     public AdDTO updateAdImage(Integer adId, MultipartFile file) {
         User user = userService.getAuthUser();
         Ad ad = getAdById(adId);
@@ -121,6 +133,7 @@ public class AdService {
         return adToDTO(ad);
     }
 
+    /** Поиск объявлений */
     public AdsDTO searchAds(String req) {
         List<Ad> list = adRepository.findAdsByTitleContaining(req);
         return new AdsDTO(list.stream().map(this::adToDTO).collect(Collectors.toList()));

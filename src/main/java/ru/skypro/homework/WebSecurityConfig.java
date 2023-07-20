@@ -13,8 +13,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
 //  private JpaUserDetailsManager jpaUserDetailsManager;
+private static final String[] AUTH_WHITELIST = {
+        "/swagger-resources/**",
+        "/swagger-ui.html",
+        "/v3/api-docs",
+        "/webjars/**",
+        "/login",
+        "/register",
+        "/ads/image/**",
+        "/ads"
+};
 
-
+/** Авторизация и аутентификация. Фильтр безопасности */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf()
@@ -30,17 +40,15 @@ public class WebSecurityConfig {
             .httpBasic(withDefaults());
     return http.build();
   }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+}
 //
-  private static final String[] AUTH_WHITELIST = {
-    "/swagger-resources/**",
-    "/swagger-ui.html",
-    "/v3/api-docs",
-    "/webjars/**",
-    "/login",
-    "/register",
-    "/ads/image/**",
-        "/ads"
-  };
+
 
 //  @Bean
 //  public DaoAuthenticationProvider jpaDaoAuthenticationProvider() {
@@ -85,9 +93,4 @@ public class WebSecurityConfig {
 
 
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
 
-}

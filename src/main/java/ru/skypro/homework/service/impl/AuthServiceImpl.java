@@ -26,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     this.encoder = encoder;
   }
 
+  /** Вход пользователя в систему */
   @Override
   public boolean login(String userName, String password) {
     if (!userService.userExists(userName)) {
@@ -35,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
     return encoder.matches(password, userDetails.getPassword());
   }
 
+  /** Регистрация пользователя */
   @Override
   public boolean register(RegisterReq registerReq, Role role) {
     if (userService.userExists(registerReq.getUsername())) {
