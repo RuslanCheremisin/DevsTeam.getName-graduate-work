@@ -53,7 +53,7 @@ public class UserService implements UserDetailsService {
     public UserDTO userToUserDTO(User user) {
         if (user.getImage() != null) {
             return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
-                    user.getImage().getImageAddress());
+                    "/users/avatar/"+user.getId());
         } else {
             return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
                     null);

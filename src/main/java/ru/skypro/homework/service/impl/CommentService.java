@@ -1,17 +1,14 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
-import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.CommentRepository;
-import ru.skypro.homework.repository.UserRepository;
 
 import java.time.Instant;
 import java.util.List;
@@ -39,7 +36,7 @@ public class CommentService {
     public CommentDTO commentToCommentDTO(Comment comment) {
         return new CommentDTO(
                 comment.getAuthor().getId(),
-                comment.getAuthor().getImage() == null ? null : comment.getAuthor().getImage().getImageAddress(),
+                comment.getAuthor().getImage() == null ? null : comment.getAuthor().getImage().getImageName(),
                 comment.getAuthor().getFirstName(),
                 comment.getCreatedAt(),
                 comment.getCommentId(),

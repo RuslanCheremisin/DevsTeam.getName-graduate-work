@@ -19,10 +19,10 @@ public class AdImage {
     @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ad_id")
     private Ad ad;
-    private String imageAddress;
+    private String imageName;
 
     public AdImage(Ad ad, String imageAddress){
         this.ad = ad;
-        this.imageAddress = imageAddress;
+        this.imageName = imageAddress;
     }
 }

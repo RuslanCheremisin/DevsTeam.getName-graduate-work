@@ -19,10 +19,10 @@ public class UserImage {
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-    private String imageAddress;
+    private String imageName;
 
-    public UserImage(User user, String imageAddress) {
+    public UserImage(User user, String imageName) {
         this.user = user;
-        this.imageAddress = imageAddress;
+        this.imageName = imageName;
     }
 }

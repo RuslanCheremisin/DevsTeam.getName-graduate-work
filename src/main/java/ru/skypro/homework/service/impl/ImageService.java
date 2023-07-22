@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @Service
 public class ImageService {
@@ -41,35 +45,57 @@ public class ImageService {
         this.adRepository = adRepository;
     }
 
-    public String updateUserImage(String username, MultipartFile file) {
+    public void updateUserImage(String username, MultipartFile file) {
         init();
         User user = userRepository.findUserByUsername(username).orElseThrow();
-        String imageAddress = "/users/avatar/" + user.getId();
+        String imageName = generateRandomFileName(file);
         if (user.getImage() == null) {
-            UserImage image = new UserImage(user, imageAddress);
+            UserImage image = new UserImage(user, imageName);
             userImageRepository.save(image);
             user.setImage(image);
             userRepository.save(user);
         }
+        else {
+            UserImage image = user.getImage();
+            deleteAvatarIfExists(image.getImageName());
+            image.setImageName(imageName);
+            userImageRepository.save(image);
+        }
         File tempFile = new File(
-                Path.of(pathToUserImages).toString(),
-                username + "_user_image.jpg");
+                Path.of(pathToUserImages).toAbsolutePath().toFile(),
+                imageName);
         writeFile(tempFile, file);
-        return imageAddress;
     }
 
-    public String updateAdImage(Integer id, MultipartFile file) {
+    public void updateAdImage(Integer id, MultipartFile file) {
+        init();
         Ad ad = adRepository.findById(id).orElseThrow();
-        String imageAddress = "/ads/image/" + id;
-        AdImage image = new AdImage(ad, imageAddress);
-        adImageRepository.save(image);
+        String imageName = generateRandomFileName(file);
+        AdImage image = new AdImage(ad, imageName);
         ad.setImage(image);
+        adImageRepository.save(image);
         File tempFile = new File(
-                Path.of(pathToAdImages).toString(),
-                adImageRepository.findAdImageByImageAddress(imageAddress).getId() + "_ad_image.jpg");
+                Path.of(pathToAdImages).toAbsolutePath().toString(),
+                imageName);
         adRepository.save(ad);
         writeFile(tempFile, file);
-        return imageAddress;
+    }
+    private void deleteAvatarIfExists(String fileName){
+        Path path = Paths.get(Path.of(pathToUserImages).toAbsolutePath().toString(),
+                fileName);
+
+        try {
+            boolean result = Files.deleteIfExists(path);
+            if (result) {
+                System.out.println("File is successfully deleted.");
+            }
+            else {
+                System.out.println("File deletion failed.");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeFile(File tempFile, MultipartFile file) {
@@ -84,15 +110,23 @@ public class ImageService {
     }
 
 
+    private String generateRandomFileName(MultipartFile file) {
+        String imageName= UUID.randomUUID() + "."+FilenameUtils.getExtension(file.getOriginalFilename());
+        while(adImageRepository.findAdImageByImageName(imageName)!=null){
+            imageName =  UUID.randomUUID() + "."+FilenameUtils.getExtension(file.getOriginalFilename());
+        }
+        return imageName;
+    }
+
     public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findUserById(id).orElseThrow();
-        return new FileSystemResource(Path.of(pathToUserImages + user.getUsername() + "_user_image.jpg"));
+        return new FileSystemResource(Path.of(pathToUserImages +user.getImage().getImageName()));
     }
 
     public FileSystemResource getAdImage(Integer id) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow();
         AdImage image = ad.getImage();
-        return new FileSystemResource(Path.of(pathToAdImages + image.getId() + "_ad_image.jpg"));
+        return new FileSystemResource(Path.of(pathToAdImages, image.getImageName()));
     }
 
     private void init() {
