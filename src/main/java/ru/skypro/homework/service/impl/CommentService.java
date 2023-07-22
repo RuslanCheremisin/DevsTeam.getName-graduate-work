@@ -54,7 +54,7 @@ public class CommentService {
         Ad ad = adRepository.findById(adId).orElseThrow();
         List<Comment> commentList = commentRepository.findCommentsByAd(ad);
         List<CommentDTO> commentsDTOList = commentList.stream()
-                .map(e -> commentToCommentDTO(e))
+                .map(this::commentToCommentDTO)
                 .collect(Collectors.toList());
         return new CommentsDTO(commentsDTOList.size(), commentsDTOList);
     }
