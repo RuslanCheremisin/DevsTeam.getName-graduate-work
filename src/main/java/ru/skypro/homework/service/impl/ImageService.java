@@ -7,11 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.model.images.AdImage;
-import ru.skypro.homework.model.images.UserImage;
-import ru.skypro.homework.repository.AdImageRepository;
+import ru.skypro.homework.model.images.Image;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.AdRepository;
-import ru.skypro.homework.repository.UserImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import java.io.File;
@@ -32,15 +30,13 @@ public class ImageService {
     @Value("${path.to.user.images}/")
     private String pathToUserImages;
 
-    private AdImageRepository adImageRepository;
-    private UserImageRepository userImageRepository;
+    private ImageRepository imageRepository;
 
     private UserRepository userRepository;
     private AdRepository adRepository;
 
-    public ImageService(AdImageRepository adImageRepository, UserImageRepository userImageRepository, UserRepository userRepository, AdRepository adRepository) {
-        this.adImageRepository = adImageRepository;
-        this.userImageRepository = userImageRepository;
+    public ImageService(ImageRepository imageRepository, UserRepository userRepository, AdRepository adRepository) {
+        this.imageRepository = imageRepository;
         this.userRepository = userRepository;
         this.adRepository = adRepository;
     }
@@ -50,16 +46,16 @@ public class ImageService {
         User user = userRepository.findUserByUsername(username).orElseThrow();
         String imageName = generateRandomFileName(file);
         if (user.getImage() == null) {
-            UserImage image = new UserImage(user, imageName);
-            userImageRepository.save(image);
+            Image image = new Image(imageName);
+            imageRepository.save(image);
             user.setImage(image);
             userRepository.save(user);
         }
         else {
-            UserImage image = user.getImage();
+            Image image = user.getImage();
             deleteAvatarIfExists(image.getImageName());
             image.setImageName(imageName);
-            userImageRepository.save(image);
+            imageRepository.save(image);
         }
         File tempFile = new File(
                 Path.of(pathToUserImages).toAbsolutePath().toFile(),
@@ -71,9 +67,9 @@ public class ImageService {
         init();
         Ad ad = adRepository.findById(id).orElseThrow();
         String imageName = generateRandomFileName(file);
-        AdImage image = new AdImage(ad, imageName);
+        Image image = new Image(imageName);
         ad.setImage(image);
-        adImageRepository.save(image);
+        imageRepository.save(image);
         File tempFile = new File(
                 Path.of(pathToAdImages).toAbsolutePath().toString(),
                 imageName);
@@ -112,7 +108,7 @@ public class ImageService {
 
     private String generateRandomFileName(MultipartFile file) {
         String imageName= UUID.randomUUID() + "."+FilenameUtils.getExtension(file.getOriginalFilename());
-        while(adImageRepository.findAdImageByImageName(imageName)!=null){
+        while(imageRepository.findAdImageByImageName(imageName)!=null){
             imageName =  UUID.randomUUID() + "."+FilenameUtils.getExtension(file.getOriginalFilename());
         }
         return imageName;
@@ -120,12 +116,12 @@ public class ImageService {
 
     public FileSystemResource getUserImage(Integer id) throws IOException {
         User user = userRepository.findUserById(id).orElseThrow();
-        return new FileSystemResource(Path.of(pathToUserImages +user.getImage().getImageName()));
+        return new FileSystemResource(Path.of(pathToUserImages, user.getImage().getImageName()));
     }
 
     public FileSystemResource getAdImage(Integer id) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow();
-        AdImage image = ad.getImage();
+        Image image = ad.getImage();
         return new FileSystemResource(Path.of(pathToAdImages, image.getImageName()));
     }
 

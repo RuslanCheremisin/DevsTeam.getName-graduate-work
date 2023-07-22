@@ -1,6 +1,7 @@
 package ru.skypro.homework.model;
 import ru.skypro.homework.dto.Role;
-import ru.skypro.homework.model.images.UserImage;
+import ru.skypro.homework.model.images.Image;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +32,9 @@ public class User {
     private List<Comment> comments = new ArrayList<>();
 
 
-    @OneToOne(targetEntity = UserImage.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToOne(targetEntity = Image.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_image_id")
-    private UserImage image;
+    private Image image;
 
 
     public Role getRole() {
@@ -44,7 +45,7 @@ public class User {
         this.role = role;
     }
 
-    public User(Integer userId, String username, String firstName, String lastname, String phone, UserImage image) {
+    public User(Integer userId, String username, String firstName, String lastname, String phone, Image image) {
         this.id = userId;
         this.username = username;
         this.firstName = firstName;
@@ -66,7 +67,7 @@ public class User {
     }
 
 
-    public User(String username, String firstName, String lastname, String phone, UserImage image) {
+    public User(String username, String firstName, String lastname, String phone, Image image) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastname;
@@ -150,11 +151,11 @@ public class User {
     }
 
 
-    public UserImage getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(UserImage image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 }

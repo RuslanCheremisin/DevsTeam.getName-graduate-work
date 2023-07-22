@@ -36,7 +36,7 @@ public class CommentService {
     public CommentDTO commentToCommentDTO(Comment comment) {
         return new CommentDTO(
                 comment.getAuthor().getId(),
-                comment.getAuthor().getImage() == null ? null : comment.getAuthor().getImage().getImageName(),
+                comment.getAuthor().getImage() == null ? null : "/users/avatar/" + comment.getAuthor().getId(),
                 comment.getAuthor().getFirstName(),
                 comment.getCreatedAt(),
                 comment.getCommentId(),

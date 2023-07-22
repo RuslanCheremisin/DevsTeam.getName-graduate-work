@@ -7,8 +7,7 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.model.images.AdImage;
-import ru.skypro.homework.repository.AdImageRepository;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 
 import java.io.*;
@@ -27,13 +26,13 @@ public class AdService {
 
     private final ImageService imageService;
 
-    private final AdImageRepository adImageRepository;
+    private final ImageRepository imageRepository;
 
-    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
+    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, ImageRepository imageRepository) {
         this.adRepository = adRepository;
         this.userService = userService;
         this.imageService = imageService;
-        this.adImageRepository = adImageRepository;
+        this.imageRepository = imageRepository;
     }
 
     public Ad getAdById(Integer id){

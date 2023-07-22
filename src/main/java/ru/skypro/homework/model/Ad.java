@@ -1,7 +1,7 @@
 package ru.skypro.homework.model;
 
 import lombok.Data;
-import ru.skypro.homework.model.images.AdImage;
+import ru.skypro.homework.model.images.Image;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ public class Ad {
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @OneToOne(targetEntity = AdImage.class, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToOne(targetEntity = Image.class, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "image_id")
-    private AdImage image;
+    private Image image;
 
     private String description;
     private Integer price;
@@ -29,7 +29,7 @@ public class Ad {
     @OneToMany(mappedBy = "ad", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Comment> comments =new ArrayList<>();
 
-    public Ad(User author, AdImage image, Integer pk, String description, Integer price, String title) {
+    public Ad(User author, Image image, Integer pk, String description, Integer price, String title) {
         this.author = author;
         this.image = image;
         this.pk = pk;
@@ -38,7 +38,7 @@ public class Ad {
         this.title = title;
     }
 
-    public Ad(User author, String description, AdImage image, Integer price, String title) {
+    public Ad(User author, String description, Image image, Integer price, String title) {
         this.author = author;
         this.image = image;
         this.description = description;
