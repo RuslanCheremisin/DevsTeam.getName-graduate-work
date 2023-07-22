@@ -20,18 +20,26 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(
                     authorization ->
                             authorization
-                                    .mvcMatchers("/login", "/register")
+                                    .mvcMatchers(AUTH_WHITELIST)
                                     .permitAll()
                                     .mvcMatchers(HttpMethod.GET, "/ads/image/**", "/ads")
                                     .permitAll()
                                     .mvcMatchers("/ads/**", "/users/**").authenticated()
-                                    .mvcMatchers("/ads/**", "/users/**").hasAnyAuthority("ADMIN")
             )
             .cors()
             .and()
             .httpBasic(withDefaults());
     return http.build();
   }
+
+    private static final String[] AUTH_WHITELIST = {
+    "/swagger-resources/**",
+    "/swagger-ui.html",
+    "/v3/api-docs",
+    "/webjars/**",
+    "/login",
+    "/register"
+  };
 
   @Bean
   public PasswordEncoder passwordEncoder() {
