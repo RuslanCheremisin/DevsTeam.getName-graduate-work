@@ -26,7 +26,7 @@ public class Ad {
     private String description;
     private Integer price;
     private String title;
-    @OneToMany(mappedBy = "ad", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "ad", fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Comment> comments =new ArrayList<>();
 
     public Ad(User author, Image image, Integer pk, String description, Integer price, String title) {
