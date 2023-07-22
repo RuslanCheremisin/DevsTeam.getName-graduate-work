@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: image_address
+                  name: image_name
                   type: varchar
               - column:
                   name: user_id

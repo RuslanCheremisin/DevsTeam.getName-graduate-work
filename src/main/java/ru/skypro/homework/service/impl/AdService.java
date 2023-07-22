@@ -7,7 +7,7 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.repository.AdImageRepository;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.AdRepository;
 
 import java.io.*;
@@ -26,13 +26,13 @@ public class AdService {
 
     private final ImageService imageService;
 
-    private final AdImageRepository adImageRepository;
+    private final ImageRepository imageRepository;
 
-    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, AdImageRepository adImageRepository) {
+    public AdService(AdRepository adRepository, UserService userService, ImageService imageService, ImageRepository imageRepository) {
         this.adRepository = adRepository;
         this.userService = userService;
         this.imageService = imageService;
-        this.adImageRepository = adImageRepository;
+        this.imageRepository = imageRepository;
     }
 
     public Ad getAdById(Integer id){
@@ -56,14 +56,14 @@ public class AdService {
         Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
 
-        savedAd.setImage(adImageRepository.findAdImageByImageAddress(imageService.updateAdImage(savedAd.getPk(), file)));
+        imageService.updateAdImage(savedAd.getPk(), file);
         return adToDTO(adRepository.save(savedAd));
     }
 
     private AdDTO adToDTO(Ad ad) {
         return new AdDTO(
                 ad.getAuthor().getId(),
-                ad.getImage().getImageAddress(),
+                "/ads/image/"+ad.getPk(),
                 ad.getPk(),
                 ad.getPrice(),
                 ad.getTitle());
@@ -76,7 +76,7 @@ public class AdService {
                 ad.getAuthor().getLastName(),
                 ad.getDescription(),
                 ad.getAuthor().getUsername(),
-                ad.getImage().getImageAddress(),
+                "/ads/image/"+ad.getPk(),
                 ad.getAuthor().getPhone(),
                 ad.getPrice(),
                 ad.getTitle());
@@ -110,7 +110,7 @@ public class AdService {
         User user = userService.getAuthUser();
         Ad ad = getAdById(adId);
         if(isUserAdAuthorOrAdmin(ad, user)){
-        File tempFile = new File(pathToAdImages, ad.getPk() + "_ad_image.jpg");
+        File tempFile = new File(pathToAdImages, ad.getImage().getImageName());
         try (FileOutputStream fos = new FileOutputStream(tempFile)) {
             fos.write(file.getBytes());
         } catch (FileNotFoundException e) {

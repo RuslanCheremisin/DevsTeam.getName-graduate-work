@@ -12,7 +12,6 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.model.UserPrincipal;
-import ru.skypro.homework.repository.UserImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
 import javax.transaction.Transactional;
@@ -23,14 +22,12 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final ImageService imageService;
-    private final UserImageRepository userImageRepository;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService, UserImageRepository userImageRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ImageService imageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
-        this.userImageRepository = userImageRepository;
     }
 
     /**
@@ -53,7 +50,7 @@ public class UserService implements UserDetailsService {
     public UserDTO userToUserDTO(User user) {
         if (user.getImage() != null) {
             return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
-                    user.getImage().getImageAddress());
+                    "/users/avatar/"+user.getId());
         } else {
             return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
                     null);

@@ -11,18 +11,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ad_images")
-public class AdImage {
+@Table(name = "images")
+public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne(targetEntity = Ad.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "ad_id")
-    private Ad ad;
-    private String imageAddress;
 
-    public AdImage(Ad ad, String imageAddress){
-        this.ad = ad;
-        this.imageAddress = imageAddress;
+    private String imageName;
+
+    public Image(String imageName){
+
+        this.imageName = imageName;
     }
 }
