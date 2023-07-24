@@ -1,6 +1,5 @@
 package ru.skypro.homework.model;
 import ru.skypro.homework.dto.Role;
-import ru.skypro.homework.model.images.Image;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-ad-images
+      id: create-images
       author: Rus
       changes:
         - createTable:
-            tableName: ad_images
+            tableName: images
             columns:
               - column:
                   name: id
@@ -16,6 +16,3 @@ databaseChangeLog:
               - column:
                   name: image_name
                   type: varchar
-              - column:
-                  name: ad_id
-                  type: integer

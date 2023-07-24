@@ -1,7 +1,6 @@
 package ru.skypro.homework.model;
 
 import lombok.Data;
-import ru.skypro.homework.model.images.Image;
 
 import javax.persistence.*;
 import java.util.ArrayList;

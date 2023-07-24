@@ -14,16 +14,6 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: created_at
-                  type: bigint
-                  constraints:
-                    nullable: false
-              - column:
-                  name: text
-                  type: varchar
-                  constraints:
-                    nullable: false
-              - column:
                   name: ad_id
                   type: integer
                   constraints:
@@ -31,5 +21,15 @@ databaseChangeLog:
               - column:
                   name: author_id
                   type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar
                   constraints:
                     nullable: false
