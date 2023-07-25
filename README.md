@@ -9,11 +9,10 @@
 ![Spring](https://img.shields.io/badge/Spring-green?style=for-the-badge&logo=spring&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-blue?style=for-the-badge&logo=docker&logoColor=white)
 </div>
+<li><a href="https://skyengpublic.notion.site/64113e0a2641475c9ad9bea93144afff">Техническое задание на проект</a></li>
 
 ## Разработчики команды: 
 Евгения Ганич, Антон Февралев, Руслан Черемисин, Дмитрий Рубцов.
-
-<li><a href="https://skyengpublic.notion.site/64113e0a2641475c9ad9bea93144afff">Техническое задание на проект</a></li>
 
 ## Краткое описание (подробно в Wiki проекта):
 
