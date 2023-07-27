@@ -16,8 +16,13 @@ import ru.skypro.homework.repository.UserRepository;
 
 import javax.transaction.Transactional;
 
+import java.util.NoSuchElementException;
+
+import static ru.skypro.homework.utils.ValidationUtils.isNotEmptyAndNotBlank;
+
 @Service
 public class UserService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -48,13 +53,17 @@ public class UserService implements UserDetailsService {
      * @return объект UserDTO
      */
     public UserDTO userToUserDTO(User user) {
-        if (user.getImage() != null) {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
-                    "/users/avatar/"+user.getId());
-        } else {
-            return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
-                    null);
+        if (user.getId() > 0 && isNotEmptyAndNotBlank(user.getUsername()) && isNotEmptyAndNotBlank(user.getFirstName())
+                && isNotEmptyAndNotBlank(user.getLastName()) && user.getRole() != null & isNotEmptyAndNotBlank(user.getPhone())) {
+            if (user.getImage() != null) {
+                return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
+                        "/users/avatar/" + user.getId());
+            } else {
+                return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
+                        null);
+            }
         }
+        throw new IllegalArgumentException();
     }
 
 
@@ -65,10 +74,13 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public boolean updateUserPassword(PasswordDTO passwordDTO) {
+        if (isNotEmptyAndNotBlank(passwordDTO.getNewPassword()) && isNotEmptyAndNotBlank(passwordDTO.getCurrentPassword())) {
             User user = getAuthUser();
-            user.setPassword(passwordDTO.getNewPassword());
+            user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
-        return true;
+            return true;
+        }
+        return false;
     }
 
 
@@ -120,7 +132,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username).orElseThrow();
+        User user = userRepository.findUserByUsername(username).orElseThrow(NoSuchElementException::new);
         UserDetailsDTO userDetailsDTO = new UserDetailsDTO(user.getUsername(), user.getPassword(), user.getId(), user.getRole());
         return new UserPrincipal(userDetailsDTO);
     }

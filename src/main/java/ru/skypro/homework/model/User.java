@@ -65,7 +65,15 @@ public class User {
     public User() {
     }
 
-
+    public User(Integer id, String username, String firstName, String lastname, String phone, Role role, Image image) {
+        this.id=id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastname;
+        this.phone = phone;
+        this.image = image;
+        this.role = role;
+    }
     public User(String username, String firstName, String lastname, String phone, Image image) {
         this.username = username;
         this.firstName = firstName;
