@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.exception.NoPermissonException;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
@@ -12,9 +13,11 @@ import ru.skypro.homework.repository.AdRepository;
 
 import java.io.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static ru.skypro.homework.utils.AuthorizationUtils.isUserAdAuthorOrAdmin;
+import static ru.skypro.homework.utils.ValidationUtils.isNotEmptyAndNotNull;
 
 @Service
 public class AdService {
@@ -36,7 +39,7 @@ public class AdService {
     }
 
     public Ad getAdById(Integer id){
-        return adRepository.findById(id).orElseThrow();
+        return adRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
     public AdsDTO getAds() {
         List<Ad> adsList = adRepository.findAll();
@@ -53,14 +56,17 @@ public class AdService {
         if (user == null) {
             throw new UnauthorizedException();
         }
-        Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(), createOrUpdateAd.getTitle());
+        if(isNotEmptyAndNotNull(createOrUpdateAd.getDescription())&&createOrUpdateAd.getPrice()>=0
+                && isNotEmptyAndNotNull(createOrUpdateAd.getTitle())){
+        Ad ad = new Ad(user, createOrUpdateAd.getDescription(), null, createOrUpdateAd.getPrice(),
+                createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
-
         imageService.updateAdImage(savedAd.getPk(), file);
-        return adToDTO(adRepository.save(savedAd));
+        return adToDTO(savedAd);}
+        throw new IllegalArgumentException();
     }
 
-    private AdDTO adToDTO(Ad ad) {
+    public AdDTO adToDTO(Ad ad) {
         return new AdDTO(
                 ad.getAuthor().getId(),
                 "/ads/image/"+ad.getPk(),
@@ -69,7 +75,7 @@ public class AdService {
                 ad.getTitle());
     }
 
-    private ExtendedAd adTOExtended(Ad ad) {
+    public ExtendedAd adTOExtended(Ad ad) {
         return new ExtendedAd(
                 ad.getPk(),
                 ad.getAuthor().getFirstName(),
@@ -90,15 +96,18 @@ public class AdService {
 
 
     public AdDTO updateAdInfo(Integer id, CreateOrUpdateAd createOrUpdateAd) {
+        if(isNotEmptyAndNotNull(createOrUpdateAd.getDescription())&&isNotEmptyAndNotNull(createOrUpdateAd.getTitle())
+        &&createOrUpdateAd.getPrice()>=0){
         User user = userService.getAuthUser();
         Ad ad = getAdById(id);
         if(isUserAdAuthorOrAdmin(ad, user)){
             ad.setDescription(createOrUpdateAd.getDescription());
         ad.setTitle(createOrUpdateAd.getTitle());
         ad.setPrice(createOrUpdateAd.getPrice());}
-        return adToDTO(adRepository.save(ad));
-
+        return adToDTO(adRepository.save(ad));}
+        throw new IllegalArgumentException();
     }
+
     public void removeAd(Integer id) {
         User user = userService.getAuthUser();
         Ad ad = getAdById(id);
@@ -106,7 +115,7 @@ public class AdService {
         adRepository.delete(ad);}
     }
 
-    public AdDTO updateAdImage(Integer adId, MultipartFile file) {
+    public AdDTO updateAdImage(Integer adId, MultipartFile file) throws NoPermissonException {
         User user = userService.getAuthUser();
         Ad ad = getAdById(adId);
         if(isUserAdAuthorOrAdmin(ad, user)){
@@ -117,8 +126,11 @@ public class AdService {
             throw new RuntimeException("File not found!");
         } catch (IOException e) {
             throw new RuntimeException();
-        }}
-        return adToDTO(ad);
+        }return adToDTO(ad);}
+        else {
+            throw new NoPermissonException();
+        }
+
     }
 
     public AdsDTO searchAds(String req) {
