@@ -94,8 +94,6 @@ public class CommentServiceTest {
         commentService.deleteCommentById(ad.getPk(),1);
         int actual = commentRepository.findCommentsByAd(ad).size();
         Assertions.assertEquals(0, actual);
-//        Assertions.assertThrows(NoSuchElementException.class,
-//                () -> commentService.getCommentByAdIdAndCommentID(ad.getPk(),1));
     }
 
     @Test
@@ -117,7 +115,6 @@ public class CommentServiceTest {
     @WithMockUser("user@gmail.com")
     public void getCorrectCommentByAdIdAndCommentID(){
         User author = userService.getAuthUser();
-        //User savedNewUser = userRepository.save(author);
         Image savedImage = imageRepository.save(new Image("imageName"));
         Ad ad = adRepository.save(new Ad(author, "descr", savedImage,
                 100, "title"));
