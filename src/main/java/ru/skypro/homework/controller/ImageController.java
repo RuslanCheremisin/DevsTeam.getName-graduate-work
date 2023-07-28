@@ -5,6 +5,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.exception.NoPermissonException;
+import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.service.impl.AdService;
 import ru.skypro.homework.service.impl.ImageService;
 
@@ -24,7 +26,7 @@ public class ImageController {
 
     @PatchMapping("ads/{id}/image")
     public ResponseEntity<?> updateImage(@PathVariable Integer id,
-                                         @RequestParam("image") MultipartFile file) {
+                                         @RequestParam("image") MultipartFile file) throws NoPermissonException {
         return ResponseEntity.ok().body(adService.updateAdImage(id, file));
     }
 

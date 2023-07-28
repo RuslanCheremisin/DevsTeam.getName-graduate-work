@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.exception.NoPermissonException;
 import ru.skypro.homework.exception.UnauthorizedException;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.model.User;
@@ -61,7 +62,7 @@ public class AdService {
                 createOrUpdateAd.getTitle());
         Ad savedAd = adRepository.save(ad);
         imageService.updateAdImage(savedAd.getPk(), file);
-        return adToDTO(adRepository.save(savedAd));}
+        return adToDTO(savedAd);}
         throw new IllegalArgumentException();
     }
 
@@ -114,7 +115,7 @@ public class AdService {
         adRepository.delete(ad);}
     }
 
-    public AdDTO updateAdImage(Integer adId, MultipartFile file) {
+    public AdDTO updateAdImage(Integer adId, MultipartFile file) throws NoPermissonException {
         User user = userService.getAuthUser();
         Ad ad = getAdById(adId);
         if(isUserAdAuthorOrAdmin(ad, user)){
@@ -125,8 +126,11 @@ public class AdService {
             throw new RuntimeException("File not found!");
         } catch (IOException e) {
             throw new RuntimeException();
-        }}
-        return adToDTO(ad);
+        }return adToDTO(ad);}
+        else {
+            throw new NoPermissonException();
+        }
+
     }
 
     public AdsDTO searchAds(String req) {
