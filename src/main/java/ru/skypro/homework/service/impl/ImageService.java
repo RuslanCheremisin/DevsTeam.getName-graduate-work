@@ -114,12 +114,12 @@ public class ImageService {
         return imageName;
     }
 
-    public FileSystemResource getUserImage(Integer id) throws IOException {
+    public FileSystemResource getUserImage(Integer id) {
         User user = userRepository.findUserById(id).orElseThrow();
         return new FileSystemResource(Path.of(pathToUserImages, user.getImage().getImageName()));
     }
 
-    public FileSystemResource getAdImage(Integer id) throws IOException {
+    public FileSystemResource getAdImage(Integer id) {
         Ad ad = adRepository.findById(id).orElseThrow();
         Image image = ad.getImage();
         return new FileSystemResource(Path.of(pathToAdImages, image.getImageName()));
