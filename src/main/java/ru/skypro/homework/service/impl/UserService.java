@@ -18,7 +18,7 @@ import javax.transaction.Transactional;
 
 import java.util.NoSuchElementException;
 
-import static ru.skypro.homework.utils.ValidationUtils.isNotEmptyAndNotBlank;
+import static ru.skypro.homework.utils.ValidationUtils.isNotEmptyAndNotNull;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -53,8 +53,8 @@ public class UserService implements UserDetailsService {
      * @return объект UserDTO
      */
     public UserDTO userToUserDTO(User user) {
-        if (user.getId() > 0 && isNotEmptyAndNotBlank(user.getUsername()) && isNotEmptyAndNotBlank(user.getFirstName())
-                && isNotEmptyAndNotBlank(user.getLastName()) && user.getRole() != null & isNotEmptyAndNotBlank(user.getPhone())) {
+        if (user.getId() > 0 && isNotEmptyAndNotNull(user.getUsername()) && isNotEmptyAndNotNull(user.getFirstName())
+                && isNotEmptyAndNotNull(user.getLastName()) && user.getRole() != null & isNotEmptyAndNotNull(user.getPhone())) {
             if (user.getImage() != null) {
                 return new UserDTO(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getRole(), user.getPhone(),
                         "/users/avatar/" + user.getId());
@@ -74,7 +74,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public boolean updateUserPassword(PasswordDTO passwordDTO) {
-        if (isNotEmptyAndNotBlank(passwordDTO.getNewPassword()) && isNotEmptyAndNotBlank(passwordDTO.getCurrentPassword())) {
+        if (isNotEmptyAndNotNull(passwordDTO.getNewPassword()) && isNotEmptyAndNotNull(passwordDTO.getCurrentPassword())) {
             User user = getAuthUser();
             user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
             userRepository.save(user);
