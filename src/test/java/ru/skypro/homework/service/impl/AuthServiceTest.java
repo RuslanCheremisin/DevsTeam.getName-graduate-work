@@ -10,10 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 
-import javax.validation.constraints.AssertTrue;
 
 @SpringBootTest
 public class AuthServiceTest {

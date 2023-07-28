@@ -19,9 +19,6 @@ import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.repository.UserRepository;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.Arrays;
 
 @SpringBootTest
 public class ImageServiceTest {
@@ -48,7 +45,6 @@ public class ImageServiceTest {
     User user;
     @Mock
     Ad ad;
-
     @Mock
     Image image;
     @Mock
@@ -131,6 +127,22 @@ public class ImageServiceTest {
         Image newImage = adRepository.findAdByPk(ad.getPk()).getImage();
         Assertions.assertNotEquals(oldImage.getImageName(), newImage.getImageName());
     }
+
+    @Test
+    public void getUserImageReturnsFileSystemResource() {
+        imageService.updateUserImage(user.getUsername(), imageFile);
+        User userFromDB = userRepository.findUserByUsername(user.getUsername()).orElseThrow();
+        FileSystemResource resource = imageService.getUserImage(userFromDB.getId());
+        Assertions.assertNotNull(resource);
+    }
+    @Test
+    public void getAdImageReturnsFileSystemResource() {
+        imageService.updateAdImage(ad.getPk(), imageFile);
+        Ad adFromDB = adRepository.findAdByPk(ad.getPk());
+        FileSystemResource resource = imageService.getAdImage(adFromDB.getPk());
+        Assertions.assertNotNull(resource);
+    }
+
 
 
 
